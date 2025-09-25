@@ -1,0 +1,9 @@
+# Root repo for core + cisv2 + CIS_TEMPLATE.php
+# Ignore all by default
+*
+
+# Allow only our tracked paths
+!.gitignore
+!core/**
+!assets/**
+!CIS_TEMPLATE.php
