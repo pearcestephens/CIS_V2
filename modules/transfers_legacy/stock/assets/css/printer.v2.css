@@ -1,0 +1,8 @@
+/* printer.v2.css — shared styles for Printer V2 across pages */
+#stx-printer-v2 .stxv2-method { transition: box-shadow .15s ease, transform .05s ease; cursor: pointer; }
+#stx-printer-v2 .stxv2-method:focus, #stx-printer-v2 .stxv2-method:hover { box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,.08); transform: translateY(-1px); }
+#stx-printer-v2 .stxv2-parcels tr { transition: background .12s; }
+#stx-printer-v2 .stxv2-parcels tr:hover { background: #fafafa; }
+#stx-printer-v2 .badge.badge-success { background-color: #28a745; }
+#stx-printer-v2 .badge.badge-warning { background-color: #ffc107; color: #000; }
+#stx-printer-v2 [data-step] { min-width: 24px; text-align:center; }

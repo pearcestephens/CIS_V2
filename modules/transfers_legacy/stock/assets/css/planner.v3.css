@@ -1,0 +1,6 @@
+/* planner.v3.css — modern UI styling for next-gen pack planner */
+.stx-planner-card{ border:1px solid #e6e9ef; border-radius:10px; box-shadow:0 2px 8px rgba(20,23,28,.06); }
+.stxv3-head{ display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid #eef1f5; background:linear-gradient(180deg,#ffffff,#fafbff); }
+.stxv3-actions .btn{ margin-left:8px; }
+.stxv3-parcels td, .stxv3-parcels th{ vertical-align:middle; }
+.badge-theme{ background:#5b8def; color:#fff; }

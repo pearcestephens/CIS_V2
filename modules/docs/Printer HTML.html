@@ -1,0 +1,326 @@
+    <?php if ($qtyItemsToSend > 0) { ?>
+      <style>
+        /* Half-width compact printer panel */
+        #printerContainer { max-width: 820px; width: 50%; min-width: 520px; margin: 20px auto; }
+        @media (max-width: 980px) { #printerContainer { width: 100%; min-width: 0; } }
+  #integrationHeader { border: 1px solid #e0e0e0; padding: 12px 14px; border-radius:10px; margin-bottom: 10px; background:#f9fbff; }
+  .vs-headline { font-weight:700; color:#12213d; font-size:16px; margin: 2px 0 8px; }
+  #printerPanel { border: 1px solid #e0e0e0; padding: 12px; border-radius:10px; background:#fff; }
+  /* Lock bar */
+  #vs-lock-bar { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 10px; border:1px solid #e6ebf5; border-radius:8px; background:#f9fbff; margin-bottom:10px; }
+  #vs-lock-status { font-size:12px; color:#24314b; }
+  #vs-lock-status .badge { font-size:11px; padding:3px 6px; border-radius:10px; }
+  .badge-idle { background:#e8fff0; color:#176b36; border:1px solid #c7f1d7; }
+  .badge-saving { background:#e8f0ff; color:#183f9e; border:1px solid #cddfff; }
+  .badge-ro { background:#fff4e6; color:#8a4b00; border:1px solid #ffe2bf; }
+  .blink { animation: vs-blink 0.9s linear infinite; }
+  @keyframes vs-blink { 50% { opacity: .4; } }
+  .vs-readonly #printerPanel input,
+  .vs-readonly #printerPanel select,
+  .vs-readonly #printerPanel textarea,
+  .vs-readonly #printerPanel button#vs-save-shipment { opacity:.6; pointer-events:auto; }
+        .vs-note { font-size: 12px; color: #666; }
+        .vs-hlabel { display:block; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:#5a6b8a; margin-bottom:2px; }
+        .vs-value { font-weight:700; color:#1b2a4a; }
+        .vs-row { display:grid; grid-template-columns: 1fr; gap:10px; }
+        .vs-grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        @media (max-width: 640px){ .vs-grid-2 { grid-template-columns: 1fr; } }
+  .vs-summary { background:#fbfcff; border:1px solid #e8eefc; border-radius:8px; padding:10px; }
+  .vs-summary .kv { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px dashed #e3e7f4; }
+        .vs-summary .kv:last-child { border-bottom: 0; }
+  .vs-summary .k { color:#556; font-size:13px; }
+  .vs-summary .v { font-weight:700; color:#1b2a4a; font-size:14px; }
+  /* Consistent, smaller buttons */
+  .btn.vs-compact { padding: .2rem .45rem; font-size: .75rem; line-height: 1.2; border-radius: .2rem; }
+  .btn-sm { padding: .25rem .5rem; font-size: .8rem; line-height: 1.2; border-radius: .2rem; }
+  /* Slightly larger table text (approx +1–2pt) within this panel */
+  #printerPanel table { font-size: 14px; }
+  #printerPanel .table th, #printerPanel .table td { font-size: 14px; }
+        /* Chips + sections */
+        .vs-chip { display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid #ccd6eb; background:#f3f6ff; color:#12213d; font-size:12px; }
+        .vs-chip.ok { background:#e8fff0; border-color:#c7f1d7; color:#176b36; }
+        .vs-chip.warn { background:#fff4e6; border-color:#ffe2bf; color:#8a4b00; }
+        .vs-section { border:1px solid #e6ebf5; border-radius:8px; padding:10px; background:#fff; }
+        .vs-section + .vs-section { margin-top: 12px; }
+        .vs-section h5 { margin:0 0 8px; font-size:14px; color:#12213d; }
+        .vs-grid { display:grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 860px){ .vs-grid { grid-template-columns: 1.2fr 1fr; } }
+      </style>
+
+      <div id="printerContainer">
+        <div id="integrationHeader">
+          <div class="vs-row">
+            <div>
+              <div class="vs-headline">
+                <span id="vs-transfer-type">Stock Transfer</span>
+                &nbsp;&bull;&nbsp;
+                <span id="vs-head-from">&nbsp;</span>
+                &rarr;
+                <span id="vs-head-to">&nbsp;</span>
+                &nbsp;&bull;&nbsp;ID: <span id="vs-head-code">&nbsp;</span>
+              </div>
+              <div class="vs-grid-2" style="margin-bottom:6px;">
+                <div>
+                  <span class="vs-hlabel">Overview</span>
+                  <div style="font-size:12px; color:#47536a;">
+                    <div><strong>Transfer ID:</strong> <span id="vs-info-code">&nbsp;</span></div>
+                    <div><strong>Created:</strong> <span id="vs-info-created">&nbsp;</span></div>
+                    <div><strong>Status:</strong> <span id="vs-info-status">&nbsp;</span></div>
+                  </div>
+                </div>
+                <div>
+                  <span class="vs-hlabel">Transfer</span>
+                  <div style="font-size:12px; color:#47536a;">
+                    <div><strong>Type:</strong> <span id="vs-info-type">Stock Transfer</span></div>
+                    <div><strong>Route:</strong> <span id="vs-info-route">&nbsp;</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="vs-grid-2">
+                <div>
+                  <span class="vs-hlabel">Where From</span>
+                  <div class="vs-value" id="vs-where-from-name">&nbsp;</div>
+                  <div id="vs-where-from-addr" style="font-size:12px; color:#47536a;">&nbsp;</div>
+                  <div id="vs-where-from-contact" style="font-size:12px; color:#65708a;">&nbsp;</div>
+                </div>
+                <div>
+                  <span class="vs-hlabel">Where To</span>
+                  <div class="vs-value" id="vs-where-to-name">&nbsp;</div>
+                  <div id="vs-where-to-addr" style="font-size:12px; color:#47536a;">&nbsp;</div>
+                  <div id="vs-where-to-contact" style="font-size:12px; color:#65708a;">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="printerPanel">
+          <div class="vs-grid">
+            <div class="vs-section">
+              <h5>Summary of Transfer</h5>
+              <div class="vs-summary" aria-live="polite">
+                <div class="kv"><span class="k">Shipping From</span><span class="v" id="vs-sum-from">&nbsp;</span></div>
+                <div class="kv"><span class="k">Shipping To</span><span class="v" id="vs-sum-to">&nbsp;</span></div>
+                <div class="kv"><span class="k">SKUs</span><span class="v" id="vs-skus">0</span></div>
+                <div class="kv"><span class="k">Units</span><span class="v" id="vs-units">0</span></div>
+                <div class="kv"><span class="k">Estimated Weight</span><span class="v"><span id="vs-est-weight">0.00</span> kg</span></div>
+                <div class="kv"><span class="k">Estimated Boxes</span><span class="v" id="vs-est-boxes">0</span></div>
+                <div class="kv"><span class="k">Total Cost Value</span><span class="v" id="vs-total-cost">—</span></div>
+              </div>
+            </div>
+            <div class="vs-section">
+              <h5>Delivery Method</h5>
+              <div class="mb-2">
+                <span class="vs-chip" id="vs-chip-nzpost">NZ Post: checking…</span>
+                <span class="vs-chip" id="vs-chip-gss">NZ Couriers: checking…</span>
+              </div>
+              <div class="d-flex align-items-center" style="gap:8px; flex-wrap:wrap;">
+                <button type="button" id="vs-print-box-slips" class="btn btn-outline-primary btn-sm vs-compact"><i class="fa fa-print mr-1"></i>Print Box Slips</button>
+                <small class="vs-note">Internal slips for each box.</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="vs-section">
+            <h5>Notes</h5>
+            <label for="vs-package-comments" class="sr-only">Delivery Instructions</label>
+            <textarea id="vs-package-comments" class="form-control" rows="3" placeholder="e.g. Leave by the door"></textarea>
+            <small class="vs-note">Internal only unless mapped by an integration.</small>
+          </div>
+
+          <div class="vs-section">
+            <h5>Shipping & Labels</h5>
+            <ol class="mb-2" style="padding-left:18px;">
+              <li>Select delivery method (NZ Post / NZ Couriers or Manual)</li>
+              <li>Print labels via the carrier or use Box Slips internally</li>
+              <li>Affix labels and proceed to Finalise</li>
+            </ol>
+            <div id="vs-ship-int-note" class="vs-note" style="display:none"></div>
+          </div>
+
+          <div class="vs-section">
+            <h5>Finalise</h5>
+            <div class="d-flex align-items-center" style="gap:10px; flex-wrap:wrap;">
+              <button type="button" id="vs-finalise" class="btn btn-primary btn-sm vs-compact">Mark Ready</button>
+              <span id="vs-finalise-msg" class="vs-note" aria-live="polite"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="vs-lock-bar" aria-live="polite" role="status" style="display:none;">
+        <div id="vs-lock-status"><span class="badge badge-idle">Idle</span> <span id="vs-lock-text">&nbsp;</span></div>
+        <div>
+          <button type="button" id="vs-request-lock" class="btn btn-outline-secondary btn-sm vs-compact" style="display:none;">Request Edit</button>
+        </div>
+      </div>
+
+      <script>
+        (function(){
+          // Helpers
+          function getTID(){
+            var tidEl = document.querySelector('[name="transfer_id"], #transfer_id, [data-transfer-id]');
+            var TID = 0; if (tidEl) {
+              if (tidEl.getAttribute && tidEl.getAttribute('data-transfer-id')) TID = parseInt(tidEl.getAttribute('data-transfer-id'),10)||0;
+              else if (tidEl.value) TID = parseInt(tidEl.value,10)||0;
+            }
+            if (!TID && typeof window.TRANSFER_ID !== 'undefined') { TID = parseInt(window.TRANSFER_ID,10)||0; }
+            return TID;
+          }
+          function csrf(){ return (document.querySelector('meta[name="csrf-token"]')||{}).content || (document.querySelector('[name="csrf"]')||{}).value || ''; }
+          function postForm(action, extra){
+            var enc = function(v){ return encodeURIComponent(v==null?'':String(v)); };
+            var body = 'ajax_action='+enc(action)+'&csrf='+enc(csrf());
+            for (var k in extra){ if(Object.prototype.hasOwnProperty.call(extra,k)){ body += '&'+enc(k)+'='+enc(extra[k]); } }
+            return fetch('https://staff.vapeshed.co.nz/modules/transfers/stock/ajax/handler.php?ajax_action='+encodeURIComponent(action), {
+              method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, credentials:'include', body: body
+            }).then(function(r){ return r.json(); });
+          }
+
+          var TID = getTID();
+          if (TID > 0){
+            // Header: descriptive type, source → destination, and ID
+            postForm('get_transfer_header', { transfer_id: TID }).then(function(j){ if(!j||!j.success) return; var d=j.data||{}; var from=d.from||{}; var to=d.to||{};
+              var fromName=document.getElementById('vs-where-from-name'); if(fromName) fromName.textContent = from.name || '';
+              var fromAddr=document.getElementById('vs-where-from-addr'); if(fromAddr) fromAddr.textContent = from.address || '';
+              var toName=document.getElementById('vs-where-to-name'); if(toName) toName.textContent = to.name || '';
+              var toAddr=document.getElementById('vs-where-to-addr'); if(toAddr) toAddr.textContent = to.address || '';
+              var fc=document.getElementById('vs-where-from-contact'); if(fc){ var parts=[]; if(from.phone) parts.push('☎ '+from.phone); if(from.email) parts.push('✉ '+from.email); fc.textContent = parts.join('  •  ') || ''; }
+              var tc=document.getElementById('vs-where-to-contact'); if(tc){ var parts2=[]; if(to.phone) parts2.push('☎ '+to.phone); if(to.email) parts2.push('✉ '+to.email); tc.textContent = parts2.join('  •  ') || ''; }
+              var codeVal = d.display_code || d.code || ('TR-STO-'+(d.transfer_id||''));
+              var hFrom=document.getElementById('vs-head-from'); if(hFrom) hFrom.textContent = from.name || '';
+              var hTo=document.getElementById('vs-head-to'); if(hTo) hTo.textContent = to.name || '';
+              var hCode=document.getElementById('vs-head-code'); if(hCode) hCode.textContent = codeVal;
+              var hType=document.getElementById('vs-transfer-type'); if(hType) hType.textContent = 'Stock Transfer';
+              var infoCode=document.getElementById('vs-info-code'); if(infoCode) infoCode.textContent = codeVal;
+              var infoCreated=document.getElementById('vs-info-created'); if(infoCreated) infoCreated.textContent = d.created_at || '';
+              var infoStatus=document.getElementById('vs-info-status'); if(infoStatus) infoStatus.textContent = d.state || '—';
+              var infoRoute=document.getElementById('vs-info-route'); if(infoRoute) infoRoute.textContent = (from.name||'') + ' → ' + (to.name||'');
+              var infoType=document.getElementById('vs-info-type'); if(infoType) infoType.textContent = 'Stock Transfer';
+            }).catch(function(){});
+
+
+          // Basic shipment mini form logic
+          var intNote = document.getElementById('vs-ship-int-note');
+          var hasPrinter = false, hasNZ = false, hasGSS = false, defaultCarrier = 'none';
+          // Detect printer integrations (NZ Post / GSS) and update chips
+          (function checkPrinters(){
+            postForm('get_printers_config', { transfer_id: TID }).then(function(r){
+              if (!r || !r.success) return;
+              var d = r.data || {}; hasNZ = !!d.has_nzpost; hasGSS = !!d.has_gss; hasPrinter = hasNZ || hasGSS; defaultCarrier = d.default || (hasNZ?'nzpost':(hasGSS?'gss':'none'));
+              var nz=document.getElementById('vs-chip-nzpost'); if(nz){ nz.textContent = 'NZ Post: ' + (hasNZ?'Available':'Unavailable'); nz.classList.toggle('ok', hasNZ); nz.classList.toggle('warn', !hasNZ); }
+              var g=document.getElementById('vs-chip-gss'); if(g){ g.textContent = 'NZ Couriers: ' + (hasGSS?'Available':'Unavailable'); g.classList.toggle('ok', hasGSS); g.classList.toggle('warn', !hasGSS); }
+              if (hasPrinter && intNote){ intNote.textContent = 'Printer integration detected. Labels will capture tracking automatically.'; intNote.style.display=''; }
+            }).catch(function(){});
+          })();
+          // Print box slips for each estimated box
+          var btnSlips = document.getElementById('vs-print-box-slips');
+          if (btnSlips){ btnSlips.addEventListener('click', function(){
+            var from=(document.getElementById('vs-where-from-name')||{}).textContent||'';
+            var to=(document.getElementById('vs-where-to-name')||{}).textContent||'';
+            var boxes = parseInt((document.getElementById('vs-est-boxes')||{}).textContent||'1',10)||1; boxes = Math.max(1, boxes);
+            var car = hasNZ? 'nzpost' : (hasGSS? 'gss' : '');
+            for (var i=1;i<=boxes;i++){
+              var url='https://staff.vapeshed.co.nz/modules/transfers/stock/print/box_slip.php?transfer='+encodeURIComponent(TID)+'&box='+i+'&from='+encodeURIComponent(from)+'&to='+encodeURIComponent(to)+(car?('&car='+car):'');
+              window.open(url,'_blank');
+            }
+          }); }
+          // Finalise (mark ready)
+          var btnFinal = document.getElementById('vs-finalise'); var finMsg = document.getElementById('vs-finalise-msg');
+          if (btnFinal){ btnFinal.addEventListener('click', function(){ if(finMsg){ finMsg.textContent='Marking ready…'; }
+            postForm('mark_ready', { transfer_id: TID }).then(function(j){ if(j&&j.success){ if(finMsg) finMsg.textContent='Marked Ready'; } else { if(finMsg) finMsg.textContent=j&&j.error||'Failed'; }}).catch(function(){ if(finMsg) finMsg.textContent='Server error'; });
+          }); }
+          // Lock banner: make control state obvious
+          var lockBar = document.getElementById('vs-lock-bar');
+          var lockText = document.getElementById('vs-lock-text');
+          var lockStatus = document.getElementById('vs-lock-status');
+          var reqBtn = document.getElementById('vs-request-lock');
+          var isReadOnly = false; var lockOwner = ''; var idleTimer = null; var mode = 'idle'; // idle|saving
+          function renderBanner(){
+            if (!lockBar || !lockStatus) return;
+            lockBar.style.display = '';
+            if (isReadOnly) {
+              lockStatus.innerHTML = '<span class="badge badge-ro">Read-only</span> <span id="vs-lock-text">'+(lockOwner?(' Locked by '+lockOwner):'')+'</span>';
+              if (reqBtn) reqBtn.style.display = '';
+            } else {
+              var badge = mode === 'saving' ? '<span class="badge badge-saving blink">Saving…</span>' : '<span class="badge badge-idle">Idle</span>';
+              var msg = mode === 'saving' ? 'Saving your changes' : 'You have control';
+              lockStatus.innerHTML = badge + ' <span id="vs-lock-text">'+msg+'</span>';
+              if (reqBtn) reqBtn.style.display = 'none';
+            }
+          }
+          function setReadOnly(ro, owner){
+            document.getElementById('printerContainer').classList.toggle('vs-readonly', !!ro);
+            if (btnSave) btnSave.disabled = !!ro;
+            var inputs = document.querySelectorAll('#printerPanel input, #printerPanel select, #printerPanel textarea');
+            for (var i=0;i<inputs.length;i++){ var el=inputs[i]; if (el.id==='vs-request-lock') continue; el.disabled = !!ro && el.id !== 'vs-manual-toggle'; }
+            isReadOnly = !!ro; lockOwner = owner || '';
+            if (isReadOnly) { mode = 'idle'; }
+            renderBanner();
+          }
+          function setMode(newMode){ if (isReadOnly) return; mode = newMode === 'saving' ? 'saving' : 'idle'; renderBanner(); }
+          async function acquire(){
+            try { var r = await postForm('acquire_lock', { transfer_id: TID });
+              var you = !!(r && r.success && r.data && r.data.you_hold_lock);
+              var owner = (r && r.data && (r.data.owner_name||r.data.owner)) || '';
+              setReadOnly(!you, owner);
+            } catch(_) { setReadOnly(true, 'unknown'); }
+          }
+          async function poll(){
+            try { var r = await postForm('poll_lock', { transfer_id: TID });
+              var you = !!(r && r.success && r.data && r.data.you_hold_lock);
+              var owner = (r && r.data && (r.data.owner_name||r.data.owner)) || '';
+              setReadOnly(!you, owner);
+            } catch(_){}
+          }
+          if (reqBtn){ reqBtn.addEventListener('click', async function(){ try{ reqBtn.disabled=true; reqBtn.textContent='Requested…'; await postForm('request_lock', { transfer_id: TID }); }catch(_){ reqBtn.disabled=false; reqBtn.textContent='Request Edit'; } }); }
+          // Release on unload
+          window.addEventListener('beforeunload', function(){ try{ navigator.sendBeacon && navigator.sendBeacon('https://staff.vapeshed.co.nz/modules/transfers/stock/ajax/handler.php?ajax_action=release_lock', new URLSearchParams({ transfer_id: TID, csrf: csrf() })); }catch(_){}});
+          // Start lock lifecycle
+          acquire(); setInterval(poll, 10000);
+          // Typing/edit detection → show Saving… then revert to Idle after debounce
+          var panel = document.getElementById('printerPanel');
+          function queueIdle(){ if (idleTimer) clearTimeout(idleTimer); idleTimer = setTimeout(function(){ setMode('idle'); }, 800); }
+          if (panel){
+            panel.addEventListener('input', function(){ setMode('saving'); queueIdle(); });
+            panel.addEventListener('change', function(){ setMode('saving'); queueIdle(); });
+          }
+          // Wrap Save button to reflect Saving state during network call
+          // No separate Save button in final layout
+          // Summary numbers
+          Promise.all([
+              postForm('list_items', { transfer_id: TID }),
+              postForm('get_product_weights', { transfer_id: TID })
+            ]).then(function(all){
+              var itemsRes = all[0]||{}; var weightsRes = all[1]||{};
+              var items = (itemsRes.success && itemsRes.data && itemsRes.data.items) ? itemsRes.data.items : [];
+              var weights = (weightsRes.success && weightsRes.data && weightsRes.data.weights) ? weightsRes.data.weights : {};
+              var skuSet = {};
+              var units = 0;
+              var estWeight = 0;
+              for (var i=0;i<items.length;i++){
+                var it = items[i]||{};
+                var pid = String(it.product_id||it.vend_product_id||it.id||it.pid||'');
+                var qty = parseFloat(it.qty_counted||it.qty||it.quantity||it.planned||1) || 0;
+                if (qty < 0) qty = 0; // normalize
+                if (pid) skuSet[pid] = true;
+                units += qty;
+                var w = parseFloat(weights[pid]||0) || 0;
+                estWeight += (w * qty);
+              }
+              var skus = Object.keys(skuSet).length;
+              var boxCapKg = 15.0; // heuristic
+              var estBoxes = estWeight > 0 ? Math.max(1, Math.ceil(estWeight / boxCapKg)) : (units>0?1:0);
+              var el;
+              if ((el=document.getElementById('vs-skus'))) el.textContent = String(skus);
+              if ((el=document.getElementById('vs-units'))) el.textContent = String(units);
+              if ((el=document.getElementById('vs-est-weight'))) el.textContent = estWeight.toFixed(2);
+              if ((el=document.getElementById('vs-est-boxes'))) el.textContent = String(estBoxes);
+              // Set From/To in summary
+              var sFrom=document.getElementById('vs-sum-from'); if(sFrom){ var n=(document.getElementById('vs-where-from-name')||{}).textContent||''; sFrom.textContent=n; }
+              var sTo=document.getElementById('vs-sum-to'); if(sTo){ var n2=(document.getElementById('vs-where-to-name')||{}).textContent||''; sTo.textContent=n2; }
+            }).catch(function(){});
+          }
+          // All boxing functionality removed for now
+        })();
+      </script>

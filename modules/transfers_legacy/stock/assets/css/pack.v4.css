@@ -1,0 +1,9 @@
+/* pack.v4.css — compact, table-first packing UI. Scoped to .stx-pack-v4 */
+@layer components {
+  .stx-pack-v4 .stxv4-toolbar { box-shadow: var(--shadow-1); }
+  .stx-pack-v4 .table thead th { position: sticky; top: 0; background: var(--bg); z-index: 2; }
+  .stx-pack-v4 .table tbody td { vertical-align: middle; }
+  .stx-pack-v4 .form-control-sm { min-height: 34px; }
+  .stx-pack-v4 .btn-sm { line-height: 1.2; }
+  .stx-pack-v4 .stxv4-toolbar .btn { white-space: nowrap; }
+}

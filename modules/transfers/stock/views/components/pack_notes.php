@@ -1,0 +1,1 @@
+<div class='notes'><textarea placeholder='Notes...'></textarea></div>

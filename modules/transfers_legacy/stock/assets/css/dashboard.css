@@ -1,0 +1,93 @@
+/* dashboard.css (stock) */
+/* Layout tightening within dashboard scope */
+/* Use Bootstrap container defaults to avoid off-centre look */
+.stx-dash{ margin: 0 auto; }
+.stx-dash .card{ margin-bottom: 8px; }
+.stx-dash .card-header{ padding: 4px 8px !important; }
+.stx-dash .card-body{ padding: 6px 8px !important; }
+/* Use default Bootstrap gutters for rows/cols to keep centering correct */
+
+/* Filters */
+.stx-filters .form-control{ min-width: 160px; padding: 2px 6px; height: 26px; }
+.stx-filters .form-group{ margin-right: 2px; margin-bottom: 4px; }
+.stx-filters label{ font-size: 11px; }
+#stx-filter-q{ width: 260px; }
+.stx-dash .form-group label{ margin-bottom: 2px; font-size: 12px; }
+/* Extra small button variant scoped to dashboard */
+.stx-dash .btn.btn-xs{ padding: 1px 6px; font-size: 11px; line-height: 1.3; border-radius: 3px; }
+.stx-controls{ gap: 6px; }
+.stx-controls-right{ margin-left: auto; }
+.stx-filters #stx-filter-state{ width: 140px; }
+
+/* Typeahead dropdown */
+.stx-typeahead{ position: relative; }
+.stx-typeahead .form-control{ width: 200px; padding-right: 20px; }
+.stx-typeahead .stx-clear-btn{ position: absolute; right: 6px; top: 24px; line-height: 1; padding: 0; border: 0; background: transparent; color: #888; cursor: pointer; font-size: 14px; }
+.stx-typeahead .stx-clear-btn:hover{ color: #555; }
+.stx-typeahead-menu{ will-change: opacity, transform; }
+.stx-typeahead-menu[style*="display: none"]{ display:none !important; }
+.stx-typeahead-menu{ position: absolute; z-index: 1000; left: 0; top: 100%; width: 100%; background: #fff; border: 1px solid rgba(0,0,0,0.15); border-top: none; max-height: 220px; overflow: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.stx-typeahead-item{ padding: 6px 8px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stx-typeahead-item:hover, .stx-typeahead-item.active{ background: #f5f5f5; }
+
+/* Stabilize table and dropdown sizes */
+.stx-table{ max-height: 500px; overflow: auto; position: relative; }
+.stx-table.overflow-visible{ overflow: visible; }
+.stx-table thead th{ position: sticky; top: 0; background: #fff; z-index: 2; }
+.dropdown-menu{ font-size: 12px; padding: 0.25rem 0; }
+.stx-row-menu{ min-width: 9rem; }
+
+/* Empty state row */
+.stx-empty{ color:#999; text-align:center; padding: 12px 0; }
+
+/* Label chips with clear (x) */
+.stx-chip{ display:inline-flex; align-items:center; background:#f2f2f2; color:#555; border-radius:10px; font-size:10px; padding:0 5px; margin-left:4px; }
+.stx-chip .stx-chip-x{ display:inline-block; margin-left:4px; cursor:pointer; color:#888; }
+.stx-chip .stx-chip-x:hover{ color:#555; }
+
+/* Subtle KPI shine effect */
+.stx-kpi{ position: relative; overflow: hidden; }
+.stx-kpi::after{ content:''; position:absolute; top:0; left:-150%; width:50%; height:100%; transform:skewX(-20deg); background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 100%); opacity:0; pointer-events:none; }
+.stx-kpi.stx-shine::after{ animation: stxShine 1.2s ease; }
+@keyframes stxShine{ 0%{ left:-150%; opacity:0; } 10%{ opacity:0.6; } 100%{ left:150%; opacity:0; } }
+.dropdown-item{ padding: 0.15rem 0.75rem; }
+.btn.btn-xs.dropdown-toggle{ padding: 1px 6px; font-size: 11px; }
+.stx-dash #stx-activity-refresh{ padding: 2px 8px; font-size: 12px; }
+
+/* Table density */
+.stx-table th, .stx-table td{ vertical-align: middle; padding: 3px 5px; }
+.stx-table tbody tr:hover{ background: #f7faff; }
+
+/* KPI strip */
+.stx-kpi{ border: 0; border-radius: 8px; overflow: hidden; }
+.stx-kpi .stx-kpi-value{ font-size: 28px; font-weight: 800; line-height: 1; }
+.stx-kpi .stx-kpi-icon{ font-size: 20px; color:#fff; opacity: .95; text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+.stx-kpi::after{ content:""; position:absolute; top:-150%; left:-50%; width:60%; height:400%; transform: rotate(25deg); background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 100%); opacity:0; pointer-events:none; }
+.stx-kpi.stx-shine::after{ animation: stxShine 900ms ease-in-out forwards; }
+@keyframes stxShine{ 0%{ opacity:0; transform: translateX(-120%) rotate(25deg); } 45%{ opacity:0.8; } 100%{ opacity:0; transform: translateX(220%) rotate(25deg); } }
+/* Ensure KPI body padding is tight even with utility classes */
+.stx-dash .stx-kpi .card-body{ padding: 6px 8px !important; }
+
+/* Vibrant KPI themes */
+.stx-kpi--open    { background: linear-gradient(135deg,#ffb700,#ff7a00); color: #1f1300; }
+.stx-kpi--motion  { background: linear-gradient(135deg,#00b3ff,#0066ff); color: #001a3d; }
+.stx-kpi--arrive  { background: linear-gradient(135deg,#00d08a,#00a36c); color: #002a20; }
+.stx-kpi--closed  { background: linear-gradient(135deg,#8b5cf6,#6d28d9); color: #160b2e; }
+
+.stx-kpi--open .stx-kpi-value,
+.stx-kpi--motion .stx-kpi-value,
+.stx-kpi--arrive .stx-kpi-value,
+.stx-kpi--closed .stx-kpi-value{ color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+
+.stx-kpi--open .text-muted,
+.stx-kpi--motion .text-muted,
+.stx-kpi--arrive .text-muted,
+.stx-kpi--closed .text-muted{ color: rgba(255,255,255,.85)!important; }
+
+/* Group tabs */
+.stx-group-tabs .nav-link{ margin-right: 4px; font-size: 12px; }
+.stx-group-tabs .nav-link.active{ background: #343a40; color: #fff; }
+
+/* Equal height cards: ensure inner content scrolls if overflow */
+.stx-dash .card.h-100 .card-body{ display:flex; flex-direction:column; min-height: 180px; }
+.stx-dash .stx-table{ overflow:auto; }

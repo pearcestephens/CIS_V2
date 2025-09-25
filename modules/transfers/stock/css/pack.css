@@ -1,0 +1,11 @@
+/* /modules/transfers/stock/css/pack.css */
+.kv { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.pack-page .card-header { font-weight: 600; }
+.pack-toast {
+  position: fixed; left: 50%; top: 20px; transform: translateX(-50%);
+  background: #111; color: #fff; padding: 8px 12px; border-radius: 6px;
+  opacity: 0; transition: opacity .15s ease-in-out; z-index: 9999;
+}
+.pack-toast.show { opacity: .92; }
+.parcel-line { font-size: 13px; padding: 2px 0; }
+.parcel-row .remove-row { margin-left: 8px; }

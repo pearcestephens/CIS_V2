@@ -1,0 +1,62 @@
+[
+  {
+    "code": "E20",
+    "label": "NZ Post Satchel E20",
+    "type": "satchel",
+    "weight_kg": 0.2,
+    "width_cm": 22,
+    "height_cm": 28,
+    "depth_cm": 1,
+    "cost_nzd": 0.00
+  },
+  {
+    "code": "E25",
+    "label": "NZ Post Satchel E25",
+    "type": "satchel",
+    "weight_kg": 0.25,
+    "width_cm": 25,
+    "height_cm": 35,
+    "depth_cm": 1,
+    "cost_nzd": 0.00
+  },
+  {
+    "code": "DL",
+    "label": "DL Satchel",
+    "type": "satchel",
+    "weight_kg": 0.18,
+    "width_cm": 11,
+    "height_cm": 22,
+    "depth_cm": 1,
+    "cost_nzd": 0.00
+  },
+  {
+    "code": "BX-S",
+    "label": "Box Small",
+    "type": "box",
+    "weight_kg": 0.4,
+    "width_cm": 30,
+    "height_cm": 20,
+    "depth_cm": 10,
+    "cost_nzd": 0.00
+  },
+  {
+    "code": "BX-M",
+    "label": "Box Medium",
+    "type": "box",
+    "weight_kg": 0.6,
+    "width_cm": 40,
+    "height_cm": 25,
+    "depth_cm": 20,
+    "cost_nzd": 0.00
+  },
+  {
+    "code": "BX-L",
+    "label": "Box Large",
+    "type": "box",
+    "weight_kg": 0.8,
+    "width_cm": 60,
+    "height_cm": 30,
+    "depth_cm": 30,
+    "cost_nzd": 0.00
+  }
+]

@@ -1,0 +1,60 @@
+/*
+  cis-tokens.css — Design tokens for CIS (light/dark), small and reusable.
+  Layer: base. Use variables; no global overrides of existing components.
+  Size budget: < 5KB.
+*/
+@layer base {
+  :root {
+    /* Spacing scale */
+    --space: 4px;
+    --space-1: calc(var(--space) * 1);
+    --space-2: calc(var(--space) * 2);
+    --space-3: calc(var(--space) * 3);
+    --space-4: calc(var(--space) * 4);
+    --space-6: calc(var(--space) * 6);
+    --space-8: calc(var(--space) * 8);
+
+    /* Radii */
+    --radius-1: 6px;
+    --radius-2: 12px;
+
+    /* Shadows */
+    --shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 1px 1px rgba(0,0,0,.04);
+    --shadow-2: 0 4px 10px rgba(0,0,0,.08), 0 2px 3px rgba(0,0,0,.06);
+
+    /* Palette (light) */
+    --brand: #0d6efd;
+    --text: #212529;
+    --muted: #6c757d;
+    --bg: #ffffff;
+    --bg-subtle: #f8f9fa;
+    --border: #dee2e6;
+    --success: #198754;
+    --info: #0dcaf0;
+    --warning: #ffc107;
+    --danger: #dc3545;
+
+    /* Focus ring */
+    --focus: color-mix(in srgb, var(--brand) 80%, white 20%);
+    --focus-outline: 2px solid var(--focus);
+    --focus-offset: 2px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text: #f1f3f5;
+      --muted: #adb5bd;
+      --bg: #121416;
+      --bg-subtle: #1a1d20;
+      --border: #2b3035;
+      --shadow-1: 0 1px 2px rgba(0,0,0,.6), 0 1px 1px rgba(0,0,0,.5);
+      --shadow-2: 0 6px 16px rgba(0,0,0,.6), 0 3px 6px rgba(0,0,0,.5);
+    }
+  }
+
+  /* Base text color hook for containers that opt in */
+  .cui-surface {
+    color: var(--text);
+    background: var(--bg);
+  }
+}

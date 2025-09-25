@@ -1,0 +1,2 @@
+-- DO NOT USE: superseded by existing `transfer_notes` table per system directive.
+-- This migration intentionally left blank to avoid creating duplicate tables.

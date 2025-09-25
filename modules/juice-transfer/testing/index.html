@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIS Testing Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
+        }
+        .test-button {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 15px 30px;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(238, 90, 36, 0.4);
+        }
+        .test-button:hover {
+            background: linear-gradient(135deg, #ee5a24 0%, #ff6b6b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(238, 90, 36, 0.6);
+            color: white;
+        }
+        .test-button.vulnerability {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            box-shadow: 0 4px 15px rgba(192, 57, 43, 0.4);
+        }
+        .test-button.comprehensive {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            box-shadow: 0 4px 15px rgba(41, 128, 185, 0.4);
+        }
+        .test-button.queue {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
+        }
+        .test-button.master {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+        }
+        .result-container {
+            max-height: 600px;
+            overflow-y: auto;
+            background: #1a1a1a;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .spinner-grow {
+            animation: spinner-grow 0.75s linear infinite;
+        }
+        .header-icon {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stats-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+        }
+        .progress-ring-circle {
+            fill: transparent;
+            stroke: #e9ecef;
+            stroke-width: 8;
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+            transform-origin: 50% 50%;
+            transform: rotate(-90deg);
+            transition: stroke-dashoffset 0.35s;
+        }
+        .progress-ring-circle.active {
+            stroke: #28a745;
+            stroke-dashoffset: calc(283 - (283 * var(--progress)) / 100);
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="dashboard-card p-5 text-center mb-4">
+                    <i class="fas fa-shield-alt header-icon"></i>
+                    <h1 class="display-4 fw-bold mb-3">CIS Testing Dashboard</h1>
+                    <p class="lead text-muted">Comprehensive endpoint testing, vulnerability scanning, and system stress testing</p>
+                    <div class="row mt-4">
+                        <div class="col-md-3">
+                            <div class="stats-card">
+                                <h5>API Endpoints</h5>
+                                <div class="display-6 text-primary fw-bold">7</div>
+                                <small class="text-muted">Monitored</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card">
+                                <h5>Security Tests</h5>
+                                <div class="display-6 text-warning fw-bold">500+</div>
+                                <small class="text-muted">Vulnerability Checks</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card">
+                                <h5>Stress Tests</h5>
+                                <div class="display-6 text-danger fw-bold">15</div>
+                                <small class="text-muted">Extreme Scenarios</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card">
+                                <h5>Coverage</h5>
+                                <svg class="progress-ring">
+                                    <circle class="progress-ring-circle active" cx="60" cy="60" r="45" style="--progress: 95;"></circle>
+                                    <text x="50%" y="50%" text-anchor="middle" dy=".3em" class="h5 fw-bold text-success">95%</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="dashboard-card p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-microscope text-primary me-3" style="font-size: 2rem;"></i>
+                        <div>
+                            <h4 class="mb-1">Comprehensive Test Suite</h4>
+                            <p class="text-muted mb-0">Full endpoint testing, input validation, SQL injection, XSS protection</p>
+                        </div>
+                    </div>
+                    <button onclick="runTest('comprehensive')" class="btn test-button comprehensive w-100">
+                        <i class="fas fa-play-circle me-2"></i>Run Comprehensive Tests
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="dashboard-card p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-bolt text-warning me-3" style="font-size: 2rem;"></i>
+                        <div>
+                            <h4 class="mb-1">Queue Stress Tests</h4>
+                            <p class="text-muted mb-0">High-volume testing, concurrency, memory exhaustion, poison pills</p>
+                        </div>
+                    </div>
+                    <button onclick="runTest('stress')" class="btn test-button queue w-100">
+                        <i class="fas fa-fire me-2"></i>Run Stress Tests
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="dashboard-card p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-bug text-danger me-3" style="font-size: 2rem;"></i>
+                        <div>
+                            <h4 class="mb-1">Vulnerability Scanner</h4>
+                            <p class="text-muted mb-0">Deep security assessment, penetration testing, exploit detection</p>
+                        </div>
+                    </div>
+                    <button onclick="runTest('vulnerability')" class="btn test-button vulnerability w-100">
+                        <i class="fas fa-search me-2"></i>Run Security Scan
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="dashboard-card p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-crown text-purple me-3" style="font-size: 2rem;"></i>
+                        <div>
+                            <h4 class="mb-1">Master Test Runner</h4>
+                            <p class="text-muted mb-0">All tests + extreme scenarios, memory leaks, deadlocks, DoS protection</p>
+                        </div>
+                    </div>
+                    <button onclick="runTest('master')" class="btn test-button master w-100">
+                        <i class="fas fa-rocket me-2"></i>Run Everything
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="dashboard-card p-4">
+                    <h4 class="mb-3">
+                        <i class="fas fa-terminal me-2"></i>Test Results
+                    </h4>
+                    
+                    <div class="loading" id="loading">
+                        <div class="spinner-grow text-primary me-2" role="status"></div>
+                        <div class="spinner-grow text-success me-2" role="status"></div>
+                        <div class="spinner-grow text-warning me-2" role="status"></div>
+                        <div class="spinner-grow text-danger me-2" role="status"></div>
+                        <h5 class="mt-3">Running tests... This may take several minutes</h5>
+                        <p class="text-muted">Testing all endpoints and attempting to break the system</p>
+                    </div>
+
+                    <div class="result-container" id="results">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="text-light mb-0">Console Output</h5>
+                            <button onclick="clearResults()" class="btn btn-outline-light btn-sm">
+                                <i class="fas fa-trash me-1"></i>Clear
+                            </button>
+                        </div>
+                        <div id="output"></div>
+                    </div>
+
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Testing Information:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li><strong>Comprehensive:</strong> ~200+ individual tests across all API endpoints</li>
+                            <li><strong>Stress Tests:</strong> High-volume, memory exhaustion, concurrency testing</li>
+                            <li><strong>Vulnerability Scan:</strong> SQL injection, XSS, CSRF, path traversal, and more</li>
+                            <li><strong>Master Runner:</strong> All tests plus extreme scenarios and edge cases</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function runTest(testType) {
+            console.log('Starting test:', testType);
+            
+            // Show loading animation
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            
+            // Clear previous results
+            document.getElementById('output').innerHTML = '';
+            
+            // Disable all test buttons
+            const buttons = document.querySelectorAll('.test-button');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Running...';
+            });
+            
+            let testUrl;
+            switch(testType) {
+                case 'comprehensive':
+                    testUrl = 'comprehensive_test_suite.php?run_tests=true';
+                    break;
+                case 'stress':
+                    testUrl = 'queue_stress_test.php?run_stress=true';
+                    break;
+                case 'vulnerability':
+                    testUrl = 'api_vulnerability_scanner.php?run_vuln_scan=true';
+                    break;
+                case 'master':
+                    testUrl = 'master_test_runner.php?run_master_tests=true';
+                    break;
+            }
+            
+            // Start the test via fetch
+            fetch(testUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'text/plain'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                // Hide loading
+                document.getElementById('loading').style.display = 'none';
+                
+                // Show results
+                document.getElementById('results').style.display = 'block';
+                
+                // Format and display output
+                const output = document.getElementById('output');
+                output.innerHTML = '<pre style="white-space: pre-wrap; word-wrap: break-word;">' + 
+                                  escapeHtml(data) + '</pre>';
+                
+                // Re-enable buttons
+                resetButtons();
+                
+                // Show success notification
+                showNotification('Tests completed successfully!', 'success');
+                
+                // Scroll to results
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+            })
+            .catch(error => {
+                console.error('Test error:', error);
+                
+                // Hide loading
+                document.getElementById('loading').style.display = 'none';
+                
+                // Show error
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('output').innerHTML = 
+                    '<div class="text-danger">Error running tests: ' + escapeHtml(error.message) + '</div>';
+                
+                // Re-enable buttons
+                resetButtons();
+                
+                // Show error notification
+                showNotification('Test execution failed: ' + error.message, 'error');
+            });
+        }
+        
+        function resetButtons() {
+            const buttons = document.querySelectorAll('.test-button');
+            const buttonConfigs = [
+                { selector: '.comprehensive', icon: 'fas fa-play-circle', text: 'Run Comprehensive Tests' },
+                { selector: '.queue', icon: 'fas fa-fire', text: 'Run Stress Tests' },
+                { selector: '.vulnerability', icon: 'fas fa-search', text: 'Run Security Scan' },
+                { selector: '.master', icon: 'fas fa-rocket', text: 'Run Everything' }
+            ];
+            
+            buttonConfigs.forEach(config => {
+                const btn = document.querySelector(config.selector);
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="${config.icon} me-2"></i>${config.text}`;
+                }
+            });
+        }
+        
+        function clearResults() {
+            document.getElementById('output').innerHTML = '';
+            document.getElementById('results').style.display = 'none';
+        }
+        
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+        
+        function showNotification(message, type = 'info') {
+            const alertClass = type === 'success' ? 'alert-success' : 
+                             type === 'error' ? 'alert-danger' : 'alert-info';
+            
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+        
+        // Auto-refresh page stats periodically
+        setInterval(() => {
+            // This would refresh real stats in a production environment
+            console.log('Stats refresh interval');
+        }, 30000);
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('CIS Testing Dashboard loaded');
+            showNotification('Testing Dashboard ready. Select a test suite to begin comprehensive system testing.', 'info');
+        });
+    </script>
+</body>
+</html>

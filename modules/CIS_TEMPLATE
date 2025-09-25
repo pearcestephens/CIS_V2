@@ -1,0 +1,6 @@
+<?php
+declare(strict_types=1);
+// Deprecated: use https://staff.vapeshed.co.nz/modules/CIS_TEMPLATE.php
+// Kept as a thin wrapper for backward compatibility only.
+require_once __DIR__ . '/CIS_TEMPLATE.php';
+exit;

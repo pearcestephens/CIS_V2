@@ -1,0 +1,15 @@
+/* Pack view scoped styles (keep <25KB) */
+.stx-pack { --space: 4px; --brand: #0d6efd; }
+.stx-pack__header { display:flex; align-items:center; justify-content:space-between; margin-bottom: calc(var(--space) * 4); }
+.stx-pack__title { font-size: 1.25rem; font-weight: 600; }
+.stx-pack__meta { display:flex; gap: calc(var(--space) * 4); color:#6c757d; }
+.stx-lock { background:#f8f9fa; border:1px solid #e9ecef; padding:8px 12px; border-radius:6px; margin-bottom:12px; }
+.stx-kv { display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:12px; }
+.kv { display:flex; align-items:center; justify-content:space-between; background:#f8f9fa; border:1px solid #e9ecef; border-radius:6px; padding:8px 10px; }
+.k { color:#6c757d; }
+.v { font-weight:600; }
+.stx-chips { display:flex; gap:8px; }
+.chip { display:inline-block; padding:4px 10px; border-radius:999px; border:1px solid #dee2e6; background:#fff; }
+.chip--nzpost { border-color:#e83e8c; }
+.chip--gss { border-color:#20c997; }
+.table-sm td, .table-sm th { padding: .4rem; }

@@ -1,0 +1,9 @@
+/* 80mm thermal roll defaults (monochrome-friendly) */
+@media print {
+  @page { size: 80mm auto; margin: 3mm; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; color: #000; }
+.label { border: 1px solid #000; border-radius: 1mm; }
+.muted { color: #111; }

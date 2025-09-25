@@ -1,0 +1,36 @@
+/*
+  stx-ui.css — Scoped UI polish for Stock Transfers (.stx-dash)
+  Uses cis-tokens and cis-utilities. Size target: < 8KB.
+*/
+@layer components {
+  .stx-dash .card { border-radius: var(--radius-1); box-shadow: var(--shadow-1); border-color: var(--border); background: var(--bg); }
+  .stx-dash .card:hover { box-shadow: var(--shadow-2); transition: box-shadow 160ms ease; }
+  .stx-dash .card-header { background: var(--bg-subtle); border-bottom-color: var(--border); }
+  .stx-dash .card-header small { letter-spacing: .06em; color: var(--muted); }
+
+  /* Focus rings for interactive controls inside module */
+  .stx-dash :is(button,.btn,input,select,textarea,a.btn):focus-visible { outline: var(--focus-outline); outline-offset: var(--focus-offset); }
+
+  /* Typeahead menu */
+  .stx-dash .stx-typeahead-menu { position: absolute; z-index: 1000; min-width: 260px; max-height: 240px; overflow: auto; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-1); box-shadow: var(--shadow-1); }
+  .stx-dash .stx-typeahead-item { padding: 6px 10px; cursor: pointer; }
+  .stx-dash .stx-typeahead-item:hover, .stx-dash .stx-typeahead-item[aria-selected="true"] { background: var(--bg-subtle); }
+
+  /* Table polish */
+  .stx-dash .stx-table thead th { position: sticky; top: 0; background: var(--bg); z-index: 1; }
+  .stx-dash .table { color: var(--text); }
+
+  /* Chips */
+  .stx-dash .stx-chip { margin-left: var(--space-1); }
+  .stx-dash .stx-chip-x { margin-left: var(--space-1); padding: 0 6px; border-radius: var(--radius-1); color: var(--muted); }
+  .stx-dash .stx-chip-x:hover, .stx-dash .stx-chip-x:focus-visible { background: var(--bg-subtle); outline: var(--focus-outline); outline-offset: var(--focus-offset); }
+
+  /* Skeleton utility (optional usage in JS) */
+  @keyframes stx-shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+  .stx-dash .skeleton { color: transparent; overflow: hidden; position: relative; }
+  .stx-dash .skeleton::after {
+    content: ""; display: block; height: 100%; width: 100%;
+    background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 37%, rgba(0,0,0,0.04) 63%);
+    background-size: 400% 100%; animation: stx-shimmer 1.2s ease-in-out infinite;
+  }
+}

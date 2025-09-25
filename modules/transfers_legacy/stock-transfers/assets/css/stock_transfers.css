@@ -1,0 +1,24 @@
+/* Scoped styles for Stock Transfers Outgoing (unified) */
+.stx-outgoing { font-size: 0.95rem; }
+.stx-outgoing .stx-table th, .stx-outgoing .stx-table td { vertical-align: middle; }
+.stx-outgoing .stx-actions .btn { margin-right: .5rem; }
+
+/* Print-friendly layout for staff printing (80-120mm slips and A4 summaries) */
+@media print {
+	/* Hide app chrome */
+	.app .sidebar, .app .header, .breadcrumb, .sidemenu, .app .footer, .modal, .btn, .alert-info { display: none !important; }
+	/* Keep main content */
+	.app-body, .main, .container-fluid, .stx-outgoing { margin: 0 !important; padding: 0 !important; }
+	/* Card simplification */
+	.card, .card-body, .card-header { border: 0 !important; box-shadow: none !important; }
+	/* Tables */
+	table.table { border-collapse: collapse !important; width: 100% !important; }
+	table.table th, table.table td { border: 1px solid #ccc !important; padding: 4px 6px !important; font-size: 12px !important; }
+	/* Printer panel minimal */
+	.stx-printer { display: block !important; }
+	.stx-printer .card-header, .stx-printer .card-body { padding: 4px 6px !important; }
+	/* Hide interactive-only elements */
+	[data-action], .form-control, select, input, textarea { pointer-events: none !important; border: 0 !important; box-shadow: none !important; }
+	/* Ensure labels section remains visible if present */
+	#generated-labels { display: block !important; }
+}

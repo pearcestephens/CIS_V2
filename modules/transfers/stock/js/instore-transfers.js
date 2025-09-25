@@ -1,0 +1,1 @@
+console.log('Instore Transfers JS loaded');

@@ -1,0 +1,38 @@
+/* cis-layouts.css — lightweight layout variants for CIS_TEMPLATE
+   Keep under 25KB, modular, and conflict-free */
+
+.cis-layout { box-sizing: border-box; }
+
+/* 1) Plain white panel with padding (no card header) */
+.cis-plain {
+  background: #fff;
+  border-radius: .25rem;
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.cis-plain .cis-title { margin-bottom: .25rem; }
+.cis-plain .cis-subtitle { color: #6c757d; font-size: .875rem; margin-bottom: .75rem; }
+
+/* 2) Grid containers */
+.cis-grid { display: grid; gap: 1rem; }
+.cis-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cis-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 991.98px){
+  .cis-grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767.98px){
+  .cis-grid-2, .cis-grid-3 { grid-template-columns: 1fr; }
+}
+
+/* 3) Split layout 66/33 with aside */
+.cis-split { display: grid; gap: 1rem; grid-template-columns: 2fr 1fr; }
+.cis-split .cis-main { min-width: 0; }
+.cis-split .cis-aside { min-width: 0; }
+@media (max-width: 991.98px){ .cis-split { grid-template-columns: 1fr; } }
+
+/* 4) Centered narrow column */
+.cis-centered { display: block; }
+.cis-centered .cis-center-box { max-width: 900px; margin: 0 auto; }
+
+/* 5) Full bleed content region (inside container-fluid but edge-to-edge within card body) */
+.cis-full-bleed { padding-left: 0; padding-right: 0; }

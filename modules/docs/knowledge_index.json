@@ -1,0 +1,135 @@
+{
+  "generated_at": "2025-09-24T00:00:00Z",
+  "base_url": "https://staff.vapeshed.co.nz/modules/",
+  "router": {
+    "query": "https://staff.vapeshed.co.nz/modules/module.php?module={module}&view={view}",
+    "pretty": "https://staff.vapeshed.co.nz/module/{module}/{view}"
+  },
+  "docs_global": {
+    "phases_plan": "https://staff.vapeshed.co.nz/modules/docs/PHASES_A30_TO_A01.md",
+    "final_repo_layout": "https://staff.vapeshed.co.nz/modules/docs/FINAL_REPO_LAYOUT.md",
+    "knowledge_base_summary": "https://staff.vapeshed.co.nz/modules/docs/KNOWLEDGE_BASE_SUMMARY.md"
+  },
+  "modules": {
+    "transfers": {
+      "docs": {
+        "readme": "https://staff.vapeshed.co.nz/modules/transfers/README.md",
+        "design": "https://staff.vapeshed.co.nz/modules/transfers/DESIGN.md"
+      },
+      "routes": {
+        "dashboard": "https://staff.vapeshed.co.nz/modules/transfers/dashboard.php"
+      },
+      "submodules": {
+        "stock": {
+          "docs": {
+            "hub": "https://staff.vapeshed.co.nz/modules/transfers/stock/docs/",
+            "reference_map": "https://staff.vapeshed.co.nz/modules/transfers/stock/docs/REFERENCE_MAP.md",
+            "component_index": "https://staff.vapeshed.co.nz/modules/transfers/stock/docs/COMPONENT_INDEX.md",
+            "knowledge_base": "https://staff.vapeshed.co.nz/modules/transfers/stock/docs/KNOWLEDGE_BASE.md",
+            "changelog": "https://staff.vapeshed.co.nz/modules/transfers/stock/docs/CHANGELOG.md",
+            "queue_integration_spec": "https://staff.vapeshed.co.nz/modules/transfers/stock/docs/QUEUE_INTEGRATION_SPEC.md"
+          },
+          "routes": {
+            "dashboard": "https://staff.vapeshed.co.nz/modules/transfers/stock/dashboard.php",
+            "pack": "https://staff.vapeshed.co.nz/modules/module.php?module=transfers/stock&view=pack&transfer={id}",
+            "outgoing": "https://staff.vapeshed.co.nz/modules/module.php?module=transfers/stock&view=outgoing"
+          },
+          "ajax_base": "https://staff.vapeshed.co.nz/modules/transfers/stock/ajax/handler.php",
+          "actions_examples": [
+            "get_dashboard_stats",
+            "list_transfers",
+            "list_outlets",
+            "get_activity",
+            "set_status",
+            "cancel_transfer",
+            "delete_transfer"
+          ]
+        },
+        "receive": {
+          "docs": {
+            "hub": "https://staff.vapeshed.co.nz/modules/transfers/receive/docs/",
+            "api_contract": "https://staff.vapeshed.co.nz/modules/transfers/receive/docs/RECEIVE_API_CONTRACT.md"
+          },
+          "routes": {
+            "dashboard": "https://staff.vapeshed.co.nz/modules/transfers/receive/dashboard.php",
+            "receive": "https://staff.vapeshed.co.nz/modules/module.php?module=transfers/receive&view=receive&transfer={id}"
+          },
+          "ajax_base": "https://staff.vapeshed.co.nz/modules/transfers/receive/ajax/handler.php"
+        }
+      }
+    },
+    "purchase-orders": {
+      "docs": {
+        "readme": "https://staff.vapeshed.co.nz/modules/purchase-orders/README.md",
+        "design": "https://staff.vapeshed.co.nz/modules/purchase-orders/DESIGN.md",
+        "api_spec": "https://staff.vapeshed.co.nz/modules/purchase-orders/API_SPEC.md",
+        "reference_map": "https://staff.vapeshed.co.nz/modules/purchase-orders/docs/REFERENCE_MAP.md",
+        "component_index": "https://staff.vapeshed.co.nz/modules/purchase-orders/docs/COMPONENT_INDEX.md",
+        "knowledge_base": "https://staff.vapeshed.co.nz/modules/purchase-orders/docs/KNOWLEDGE_BASE.md",
+        "changelog": "https://staff.vapeshed.co.nz/modules/purchase-orders/docs/CHANGELOG.md"
+      },
+      "routes": {
+        "index": "https://staff.vapeshed.co.nz/modules/module.php?module=purchase-orders&view=index",
+        "receive": "https://staff.vapeshed.co.nz/modules/module.php?module=purchase-orders&view=receive",
+        "admin": "https://staff.vapeshed.co.nz/modules/module.php?module=purchase-orders&view=admin"
+      },
+      "ajax_base": "https://staff.vapeshed.co.nz/modules/purchase-orders/ajax/handler.php",
+      "actions_examples": [
+        "po.get_po",
+        "po.save_progress",
+        "po.submit_partial",
+        "po.submit_final",
+        "po.search_products",
+        "po.update_live_stock",
+        "po.unlock",
+        "po.extend_lock",
+        "po.release_lock",
+        "po.upload_evidence",
+        "po.list_evidence",
+        "po.issue_upload_qr",
+        "po.assign_evidence",
+        "admin.list_receipts",
+        "admin.list_events",
+        "admin.list_inventory_requests",
+        "admin.retry_request",
+        "admin.force_resend"
+      ]
+    },
+    "audit": {
+      "docs": {
+        "readme": "https://staff.vapeshed.co.nz/modules/audit/README.md"
+      },
+      "routes": {
+        "viewer": "https://staff.vapeshed.co.nz/modules/module.php?module=_shared/admin/audit&view=viewer"
+      }
+    },
+    "migrations": {
+      "docs": {
+        "readme": "https://staff.vapeshed.co.nz/modules/migrations/README.md"
+      },
+      "routes": {
+        "runner": "https://staff.vapeshed.co.nz/modules/migrations/run.php"
+      }
+    },
+    "MODULE_TEMPLATE": {
+      "docs": {
+        "readme": "https://staff.vapeshed.co.nz/modules/MODULE_TEMPLATE/README.md"
+      },
+      "routes": {
+        "pretty": "https://staff.vapeshed.co.nz/module/__MODULE_SLUG__/index",
+        "query": "https://staff.vapeshed.co.nz/modules/CIS_TEMPLATE.php?module=__MODULE_SLUG__&view=index"
+      }
+    },
+    "juice-transfer": {
+      "docs": {
+        "note": "No dedicated docs found in repo; consider aligning with Transfers base and adding standard docs."
+      },
+      "routes": {
+        "dashboard": "https://staff.vapeshed.co.nz/modules/juice-transfer/juice_transfer_dashboard.php",
+        "create": "https://staff.vapeshed.co.nz/modules/juice-transfer/juice_transfer_create.php",
+        "list": "https://staff.vapeshed.co.nz/modules/juice-transfer/juice_transfer_list.php",
+        "api": "https://staff.vapeshed.co.nz/modules/juice-transfer/api/juice_transfer_api.php"
+      }
+    }
+  }
+}

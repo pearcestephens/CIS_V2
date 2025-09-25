@@ -1,0 +1,5 @@
+/* pack.v3.css — modern layout and sticky bar */
+.stx-pack-v3{ position:relative; }
+.stxv3-bar{ position:sticky; top:0; z-index:5; display:flex; align-items:center; justify-content:space-between; background:#fff; border:1px solid #e9edf3; border-radius:8px; padding:8px 12px; margin-bottom:10px; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+.stx-items-v3 .stxv3-table-wrap{ max-height:60vh; overflow:auto; }
+.stx-items-v3 .stxv3-dot{ width:8px; height:8px; border-radius:50%; background:#9aa6b2; }

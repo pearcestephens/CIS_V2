@@ -1,0 +1,140 @@
+<?php
+// Includes ALL CONFIG/DB & All asset/functions files - DO NOT INCLUDE ANYTHING ELSE
+include("assets/functions/config.php"); 
+// Includes ALL CONFIG/DB & All asset/functions files - DO NOT INCLUDE ANYTHING ELSE
+
+
+//######### AJAX BEGINS HERE #########
+// Proxy ajax_action to module handler when hitting /module/{module}/{view}
+try {
+  if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+    $act = $_POST['ajax_action'] ?? ($_POST['action'] ?? null);
+    if ($act) {
+      $uri = $_SERVER['REQUEST_URI'] ?? '';
+      $module = '';
+      if (preg_match('#/module/([a-z0-9_\-]+)/#i', $uri, $m)) {
+        $module = strtolower($m[1]);
+      } else if (!empty($_GET['module'])) {
+        $module = preg_replace('/[^a-z0-9_\-]/i','', $_GET['module']);
+      }
+      if ($module) {
+        $handler = __DIR__ . "/modules/{$module}/ajax/handler.php";
+        if (is_file($handler)) { include $handler; exit; }
+      }
+      $fallback = __DIR__ . "/modules/purchase_orders/ajax/handler.php";
+      if (is_file($fallback)) { include $fallback; exit; }
+      http_response_code(200);
+      header('Content-Type: application/json; charset=utf-8');
+      echo json_encode(['success'=>false,'error'=>'invalid','request_id'=>bin2hex(random_bytes(8))]);
+      exit;
+    }
+  }
+} catch (Throwable $e) {
+  http_response_code(200);
+  header('Content-Type: application/json; charset=utf-8');
+  echo json_encode(['success'=>false,'error'=>'template_proxy_error']);
+  exit;
+}
+
+//######### AJAX ENDS HERE #########
+
+//######### HEADER BEGINS HERE ######### -->
+
+include("assets/template/html-header.php");
+include("assets/template/header.php");
+
+//######### HEADER ENDS HERE ######### -->
+
+?>
+
+<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+  <?php
+  // Global security headers for all public-facing pages rendered via CIS_TEMPLATE
+  if (!headers_sent()) {
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('Referrer-Policy: no-referrer-when-downgrade');
+    header('X-XSS-Protection: 1; mode=block');
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+  }
+  ?>
+  <div class="app-body">
+    <?php include("assets/template/sidemenu.php"); ?>
+    <main class="main">
+      <!-- Breadcrumb -->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">Home</li>
+        <li class="breadcrumb-item">
+          <a href="#"><!--    #### PAGE PARENT GOES HERE #### --></a>
+        </li>
+        <li class="breadcrumb-item active"><!--    #### PAGE NAME GOES HERE #### --></li>
+        <!-- Breadcrumb Menu-->
+        <li class="breadcrumb-menu d-md-down-none">
+          <?php include('assets/template/quick-product-search.php'); ?>
+        </li>
+      </ol>
+      <div class="container-fluid">
+        <div class="animated fadeIn">
+          <div class="row">
+            <div class="col ">
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title mb-0"><!--    #### PAGE CONTENT GOES HERE #### --></h4>
+                  <div class="small text-muted"><!--    #### PAGE BLURB OR DESCRIPTION GOES HERE #### --></div>
+                </div>
+                <div class="card-body">
+                  <div class="cis-content">
+                      <?php
+                      // Render module view inside the CIS template when visiting /module/{module}/{view}
+                      $cis_module_output = '';
+                      $cis_module = '';
+                      $cis_view = '';
+                      $uri = $_SERVER['REQUEST_URI'] ?? '';
+                      if (preg_match('#/module/([a-z0-9_\-]+)/([a-z0-9_\-]+)#i', $uri, $m)) {
+                        $cis_module = strtolower($m[1]);
+                        $cis_view = strtolower($m[2]);
+                      } else {
+                        if (!empty($_GET['module'])) { $cis_module = preg_replace('/[^a-z0-9_\-]/i','', $_GET['module']); }
+                        if (!empty($_GET['view'])) { $cis_view = preg_replace('/[^a-z0-9_\-]/i','', $_GET['view']); }
+                      }
+                      if ($cis_module && $cis_view) {
+                        $base = __DIR__ . "/modules/{$cis_module}";
+                        $candidates = [
+                          $base . "/views/{$cis_view}.php",
+                          $base . "/{$cis_view}.php",
+                        ];
+                        foreach ($candidates as $file) {
+                          if (is_file($file)) { ob_start(); include $file; $cis_module_output = ob_get_clean(); break; }
+                        }
+                        if ($cis_module_output === '') {
+                          $cis_module_output = '<div class="text-muted">Module view not found.</div>';
+                        }
+                        echo $cis_module_output; // Module views handle their own escaping/output
+                      } else {
+                        echo '<div class="text-muted">No module/view specified.</div>';
+                      }
+                      ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--/.row-->
+        </div>
+      </div>
+    </main>
+    <!-- ######### FOOTER BEGINS HERE ######### -->
+    <?php include("assets/template/personalisation-menu.php"); ?>
+  </div>
+
+   <!-- ######### CSS BEGINS HERE ######### -->
+
+   <!-- ######### CSS BEGINS HERE ######### -->
+
+
+  <!-- ######### JAVASSCRIPT BEGINS HERE ######### -->
+  <!-- ######### JAVASSCRIPT ENDS HERE ######### -->
+
+  <?php include("assets/template/html-footer.php"); ?>
+  <?php include("assets/template/footer.php"); ?>
+  <!-- ######### FOOTER ENDS HERE ######### -->

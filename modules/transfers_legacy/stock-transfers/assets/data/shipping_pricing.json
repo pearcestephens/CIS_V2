@@ -1,0 +1,32 @@
+{
+  "nzpost": {
+    "letters": [
+      { "code": "MEDIUM_LETTER", "name": "Medium Letter (≤500g, 130×235×6mm)", "price": 2.90, "dimensions_mm": [130,235,6] },
+      { "code": "LARGE_LETTER",  "name": "Large Letter (≤500g, 165×235×10mm)",  "price": 4.20, "dimensions_mm": [165,235,10] },
+      { "code": "OVERSIZE_LETTER", "name": "Oversize Letter (≤1kg, 260×385×20mm)", "price": 5.50, "dimensions_mm": [260,385,20] }
+    ],
+    "boxes": [
+      { "code": "BOX_1", "name": "Box Size 1 (235×165×70 mm)",  "price": 2.50, "dimensions_mm": [235,165,70] },
+      { "code": "BOX_2", "name": "Box Size 2 (250×185×170 mm)", "price": 4.50, "dimensions_mm": [250,185,170] },
+      { "code": "BOX_3", "name": "Box Size 3 (350×265×200 mm)", "price": 5.00, "dimensions_mm": [350,265,200] },
+      { "code": "BOX_4", "name": "Box Size 4 (318×216×507 mm)", "price": 6.50, "dimensions_mm": [318,216,507] },
+      { "code": "BOX_5", "name": "Box Size 5 (418×286×540 mm)", "price": 8.50, "dimensions_mm": [418,286,540] },
+      { "code": "BOX_WINE", "name": "Wine Box (460×140×120 mm)", "price": 5.00, "dimensions_mm": [460,140,120] }
+    ]
+  },
+  "gss": {
+    "tickets": [
+      { "code": "LOCAL",       "name": "Local Delivery (≤0.1 m³ or 25kg)", "price": 11.50 },
+      { "code": "OUTER_AREA",   "name": "Outer Area (≤15kg or 0.025 m³)",   "price": 12.00 },
+      { "code": "SHORTHAUL",    "name": "Shorthaul (≤15kg or 0.025 m³)",     "price": 15.00 },
+      { "code": "LONGHAUL",     "name": "Longhaul (≤5kg or 0.025 m³)",      "price": 21.00 },
+      { "code": "INTER_ISLAND", "name": "Inter-Island (≤5kg or 0.025 m³)",  "price": 38.00 }
+    ],
+    "surcharges": [
+      { "code": "RURAL",        "name": "Rural Delivery",                 "price": 8.00 },
+      { "code": "SATURDAY",     "name": "Saturday Delivery",             "price": 8.00 },
+      { "code": "RESIDENTIAL",  "name": "Residential Delivery Zone",     "price": 3.50 },
+      { "code": "R18",          "name": "R18 Restricted Delivery",       "price": 6.80 }
+    ]
+  }
+}

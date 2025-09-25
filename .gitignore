@@ -1,11 +1,7 @@
-# Root repo for core + cisv2 + CIS_TEMPLATE.php
-# Ignore all by default
-*
-
-# Allow only our tracked paths (unignore parent dirs too)
-!.gitignore
-!core
-!core/**
-!assets
-!assets/**
-!CIS_TEMPLATE.php
+/vendor/
+/node_modules/
+.env
+uploads/
+cache/
+*.log
+/private_html/backups/

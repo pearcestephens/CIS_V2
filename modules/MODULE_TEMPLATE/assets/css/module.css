@@ -1,0 +1,4 @@
+/* __MODULE_NAME__ styles (keep under 25KB) */
+.__MODULE_SLUG__-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; background:#fff; }
+.__MODULE_SLUG__-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.__MODULE_SLUG__-actions { gap: 6px; display:flex; flex-wrap:wrap; }

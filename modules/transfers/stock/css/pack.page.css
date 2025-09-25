@@ -1,0 +1,3 @@
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.pack-page .card-header { font-weight: 600; }
+.pack-page .parcel-row + .parcel-row { margin-top: .5rem; }

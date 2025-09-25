@@ -1,0 +1,37 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Transfers Smoke</title>
+<style>
+body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:20px}
+label{display:block;margin:.5rem 0 .25rem}
+input{padding:.25rem .5rem}
+pre{background:#0f1721;color:#e6edf3;padding:12px;border-radius:6px;white-space:pre-wrap}
+button{padding:.4rem .7rem}
+</style>
+<h2>Transfers Smoke Test</h2>
+<label>Transfer PK</label>
+<input id="tid" type="number" min="1" placeholder="e.g. 12345">
+<label>Product ID (optional)</label>
+<input id="pid" type="number" placeholder="default 1001">
+<label>Qty (optional)</label>
+<input id="qty" type="number" min="1" value="1">
+<div style="margin-top:10px">
+  <button id="run">Run Selftest</button>
+</div>
+<h3>Result</h3>
+<pre id="out">{}</pre>
+<script>
+document.getElementById('run').onclick = async () => {
+  const t = document.getElementById('tid').value.trim();
+  const p = document.getElementById('pid').value.trim();
+  const q = document.getElementById('qty').value.trim();
+  if (!t) { alert('Enter transfer_pk'); return; }
+  const qs = new URLSearchParams({ transfer_pk: t });
+  if (p) qs.set('product_id', p);
+  if (q) qs.set('qty', q);
+  const url = '/modules/transfers/stock/tools/selftest.php?' + qs.toString();
+  const r = await fetch(url, { cache: 'no-store' });
+  const j = await r.json().catch(()=>({ok:false,error:'bad json'}));
+  document.getElementById('out').textContent = JSON.stringify(j, null, 2);
+};
+</script>

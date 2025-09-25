@@ -1,0 +1,52 @@
+{
+    "123": [
+        {
+            "ts": "2025-09-22T10:06:54+12:00",
+            "carrier": "NZ_POST",
+            "service": "BOX",
+            "packages": [
+                {
+                    "length": 200,
+                    "width": 100,
+                    "height": 80,
+                    "weight": 2.3
+                }
+            ],
+            "tracking_number": "NZ_POST-123-testre",
+            "label_url": "https://staff.vapeshed.co.nz/modules/transfers/stock/assets/labels/sim_NZ_POST-123-testre.pdf",
+            "ref": "REF-1",
+            "by": 1,
+            "request_id": "testreq"
+        }
+    ],
+    "456": [
+        {
+            "ts": "2025-09-22T10:07:18+12:00",
+            "carrier": "GSS",
+            "service": "LOCAL",
+            "packages": [
+                {
+                    "length": 220,
+                    "width": 120,
+                    "height": 90,
+                    "weight": 3.1
+                }
+            ],
+            "tracking_number": "GSS-456-smoket",
+            "label_url": "https://staff.vapeshed.co.nz/modules/transfers/stock/assets/labels/sim_GSS-456-smoket.pdf",
+            "ref": "",
+            "by": 1,
+            "request_id": "smoketest"
+        },
+        {
+            "ts": "2025-09-22T10:07:18+12:00",
+            "carrier": "MANUAL",
+            "tracking_number": "123456",
+            "label_url": "",
+            "notes": "",
+            "by": 1,
+            "request_id": "smoketest",
+            "manual": true
+        }
+    ]
+}

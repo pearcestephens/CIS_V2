@@ -1,0 +1,10 @@
+DirectoryIndex index.php
+Options -Indexes
+RewriteEngine On
+RewriteBase /modules/purchase-orders/
+# stop parent rewrites inside this folder
+RewriteRule ^ - [L]
+# fallback to index.php for non-files/dirs (safe to keep)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php [L]
