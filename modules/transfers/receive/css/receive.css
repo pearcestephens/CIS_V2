@@ -1,2 +1,144 @@
-.transfers-receive .card { box-shadow: none; }
-.transfers-receive #scan-input { font-size: 20px; letter-spacing: 0.5px; }
+.transfers-receive .card {
+	border-radius: 0.6rem;
+	box-shadow: var(--vs-shadow-sm, 0 0.25rem 0.4rem rgba(0, 0, 0, 0.08));
+}
+
+.transfers-receive .card-header {
+	font-weight: 600;
+	background: var(--vs-surface-subtle, #f8fafc);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.transfers-receive .mono {
+	font-family: var(--vs-font-mono, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+}
+
+.transfers-receive .badge {
+	letter-spacing: 0.05em;
+}
+
+.transfers-receive .receive-screen {
+	position: relative;
+}
+
+.transfers-receive #receive-items tbody tr td {
+	vertical-align: middle;
+}
+
+.transfers-receive #receive-items .qty-input {
+	width: 120px;
+	text-align: right;
+}
+
+.transfers-receive #receive-items .badge {
+	min-width: 3.2rem;
+}
+
+.transfers-receive .progress {
+	background-color: rgba(0, 0, 0, 0.08);
+}
+
+.transfers-receive .media-tile {
+	transition: transform 120ms ease;
+}
+
+.transfers-receive .media-tile:hover {
+	transform: translateY(-2px);
+}
+
+.transfers-receive .media-thumb {
+	height: 140px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(15, 23, 42, 0.04);
+	border-radius: 0.45rem;
+	overflow: hidden;
+}
+
+.transfers-receive .media-thumb img {
+	max-height: 100%;
+	object-fit: cover;
+}
+
+.transfers-receive .media-icon {
+	font-size: 2rem;
+}
+
+.transfers-receive .card-body > .table-responsive {
+	max-height: 520px;
+}
+
+.transfers-receive .card-body > .table-responsive::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+.transfers-receive .card-body > .table-responsive::-webkit-scrollbar-thumb {
+	background: rgba(37, 99, 235, 0.45);
+	border-radius: 999px;
+}
+
+.transfers-receive .parcel-action {
+	line-height: 1;
+	width: 2rem;
+	padding: 0.25rem;
+}
+
+.transfers-receive .parcel-qr {
+	font-size: 0.75rem;
+	opacity: 0.8;
+}
+
+.transfers-receive .parcel-qr:hover {
+	opacity: 1;
+}
+
+.transfers-receive #receive-feedback {
+	min-height: 1.4rem;
+}
+
+.transfers-receive form .form-label {
+	font-size: 0.7rem;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.transfers-receive form .form-control,
+.transfers-receive form .form-select {
+	border-radius: 0.45rem;
+}
+
+.transfers-receive #discrepancy-list .badge {
+	letter-spacing: 0.04em;
+}
+
+@media (max-width: 1199.98px) {
+	.transfers-receive .card-body > .table-responsive {
+		max-height: none;
+	}
+}
+
+@media (max-width: 991.98px) {
+	.transfers-receive .card {
+		box-shadow: none;
+	}
+
+	.transfers-receive .card-header {
+		font-size: 0.95rem;
+	}
+}
+
+@media (max-width: 575.98px) {
+	.transfers-receive .card-body {
+		padding: 1rem;
+	}
+
+	.transfers-receive #receive-items .qty-input {
+		width: 100%;
+	}
+
+	.transfers-receive .media-thumb {
+		height: 120px;
+	}
+}
