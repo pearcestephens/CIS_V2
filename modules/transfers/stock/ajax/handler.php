@@ -26,7 +26,10 @@ switch ($action) {
 
     case 'finalize':
         require __DIR__ . '/actions/finalize_pack.php';
-        finalize_pack($input);
+        $transferId = (int) ($input['transfer_id'] ?? ($_GET['transfer'] ?? 0));
+        $result = cisv2_finalize_pack($transferId);
+        $status = ($result['success'] ?? false) ? 200 : 500;
+        Response::json($result, $status);
         break;
 
     default:

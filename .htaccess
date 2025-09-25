@@ -1,5 +1,1 @@
-# Route transfers/stock requests through the CIS v2 router
-RewriteEngine On
-RewriteCond %{REQUEST_URI} ^/modules/module\.php$ [NC]
-RewriteCond %{QUERY_STRING} (^|&)module=transfers/stock(&|$) [NC]
-RewriteRule ^ /router.php [QSA,L]
+# Routing is handled in /modules/.htaccess so this file stays minimal on CISV2 assets

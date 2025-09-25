@@ -18,8 +18,49 @@ if ($uid && function_exists('getUserInformation')) {
 }
 
 
+if (!function_exists('cisv2_breadcrumb')) {
+  function cisv2_breadcrumb(array $crumbs): void {
+    if (!$crumbs) {
+      return;
+    }
+    echo '<nav aria-label="breadcrumb" class="mt-3"><ol class="breadcrumb">';
+    foreach ($crumbs as $crumb) {
+      $label = htmlspecialchars($crumb['label'] ?? '', ENT_QUOTES, 'UTF-8');
+      $href = $crumb['href'] ?? null;
+      if ($href) {
+        echo '<li class="breadcrumb-item"><a href="' . htmlspecialchars($href, ENT_QUOTES, 'UTF-8') . '">' . $label . '</a></li>';
+      } else {
+        echo '<li class="breadcrumb-item active" aria-current="page">' . $label . '</li>';
+      }
+    }
+    echo '</ol></nav>';
+  }
+}
+
+$queueBanner = '';
+if (function_exists('cisv2_queue_health')) {
+  try {
+    $qHealth = cisv2_queue_health();
+    if (empty($qHealth['ok'])) {
+      $queueBanner = '<div class="alert alert-warning py-1 px-2 small mb-0">Queue: degraded</div>';
+    }
+  } catch (Throwable $e) {
+    $queueBanner = '<div class="alert alert-warning py-1 px-2 small mb-0">Queue: unknown</div>';
+  }
+}
+
+$queueWidget = ['item' => '', 'after' => ''];
+$queueWidgetPath = __DIR__ . '/partials/queue-widget.php';
+if (is_file($queueWidgetPath)) {
+  $widgetResult = include $queueWidgetPath;
+  if (is_array($widgetResult)) {
+    $queueWidget = array_merge($queueWidget, $widgetResult);
+  }
+}
+
 ?>
 <body>
+<?= $queueBanner ?>
 <header class="app-header navbar">
   <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
     <span class="navbar-toggler-icon"></span>
@@ -34,6 +75,7 @@ if ($uid && function_exists('getUserInformation')) {
   <ul class="nav navbar-nav d-md-down-none">
   </ul>
   <ul class="nav navbar-nav ml-auto">
+    <?= $queueWidget['item'] ?? '' ?>
     <li class="nav-item d-md-down-none">
       <span>Hello, <?php echo htmlspecialchars($userDetails["first_name"] ?? "Guest"); ?><?php if ($uid): ?><a class="nav-link" href="?logout=true">Logout</a><?php endif; ?></span>
     </li>
@@ -72,6 +114,7 @@ if ($uid && function_exists('getUserInformation')) {
   </ul>
  
 </header>
+<?= $queueWidget['after'] ?? '' ?>
 <div class="modal fade" id="notificationModel" tabindex="-1" role="dialog" aria-labelledby="notificationModelLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

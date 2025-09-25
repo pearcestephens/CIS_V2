@@ -1,17 +1,40 @@
 <?php
-/**
- * File: modules/transfers/stock/controllers/pack.php
- * Purpose: Render the pack view within the CIS v2 template shell.
- * Author: GitHub Copilot
- * Last Modified: 2025-09-25
- * Dependencies: views/pack.php, views/pack.meta.php, assets/templates/cisv2
- */
 declare(strict_types=1);
 
-ob_start();
-require __DIR__ . '/../views/pack.php';
-$content = ob_get_clean();
-$meta = require __DIR__ . '/../views/pack.meta.php';
+/**
+ * Controller: Pack page
+ * Inputs: transfer (int)
+ * Output: $content (HTML), $meta (array)
+ * Uses: views/pack.php for the main content
+ */
 
-require_once CIS_CORE_PATH . '/layout.php';
-cis_render_layout($meta, $content);
+/** @var array $ctx from router */
+$pdo     = $ctx['pdo'];
+$params  = $ctx['params'];
+$tid     = isset($params['transfer']) ? max(0, (int)$params['transfer']) : 0;
+
+// Minimal transfer fetch (adjust to your schema)
+$transfer = null;
+if ($tid > 0) {
+    $st = $pdo->prepare("SELECT id, ref_code, status, origin_outlet_id, dest_outlet_id, created_at
+                         FROM stock_transfers WHERE id = :id LIMIT 1");
+    $st->execute([':id'=>$tid]);
+    $transfer = $st->fetch() ?: null;
+}
+
+$meta = [
+    'title' => $tid > 0 ? "Pack Transfer #{$tid}" : 'Pack Transfer',
+    'breadcrumb' => [
+        ['label'=>'Transfers','href'=>'/module/transfers'],
+        ['label'=>'Stock','href'=>'/module/transfers/stock'],
+        ['label'=>$tid > 0 ? "Pack #{$tid}" : 'Pack'],
+    ],
+];
+
+/** Render the view */
+$viewFile = __DIR__.'/../views/pack.php';
+ob_start();
+$transferVar = $transfer;  // expose as $transferVar to view
+$tidVar      = $tid;
+require $viewFile;
+$content = (string)ob_get_clean();

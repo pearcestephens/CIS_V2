@@ -1,26 +1,19 @@
 <?php
-/**
- * File: modules/transfers/stock/views/pack.meta.php
- * Purpose: Provide metadata for the CIS v2 pack transfer view.
- * Author: GitHub Copilot
- * Last Modified: 2025-09-25
- * Dependencies: None
- */
 declare(strict_types=1);
 
-$transferId = 0;
-foreach (['transfer', 'transfer_id', 'id', 'tid', 't'] as $key) {
-    if (isset($_GET[$key]) && (int) $_GET[$key] > 0) {
-        $transferId = (int) $_GET[$key];
+$tid = 0;
+foreach (['transfer', 'transfer_id', 'id', 't'] as $k) {
+    if (isset($_GET[$k]) && (int) $_GET[$k] > 0) {
+        $tid = (int) $_GET[$k];
         break;
     }
 }
 
 return [
-    'title'      => $transferId ? "Pack Transfer #{$transferId}" : 'Pack Transfer',
+    'title'      => $tid > 0 ? ('Pack Transfer #' . $tid) : 'Pack Transfer',
     'breadcrumb' => [
         ['label' => 'Transfers', 'href' => '/module/transfers'],
-        ['label' => 'Stock', 'href' => '/module/transfers/stock'],
-        ['label' => $transferId ? "Pack #{$transferId}" : 'Pack'],
+        ['label' => 'Stock',     'href' => '/module/transfers/stock'],
+        ['label' => $tid > 0 ? ('Pack #' . $tid) : 'Pack'],
     ],
 ];

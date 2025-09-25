@@ -1,0 +1,4 @@
+# Route specific legacy module traffic into CIS V2 router
+RewriteEngine On
+RewriteCond %{QUERY_STRING} (^|&)module=transfers/stock(&|$) [NC]
+RewriteRule ^module\.php$ /cisv2/router.php [L,QSA]

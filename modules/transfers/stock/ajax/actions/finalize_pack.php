@@ -1,49 +1,71 @@
 <?php
-/**
- * File: modules/transfers/stock/ajax/actions/finalize_pack.php
- * Purpose: Handle finalize action for CIS v2 pack prototype.
- * Author: GitHub Copilot
- * Last Modified: 2025-09-25
- * Dependencies: CIS\Core\Response
- */
 declare(strict_types=1);
 
-use CIS\Core\Response;
+if (!defined('CISV2_ROOT')) {
+    require dirname(__DIR__, 5) . '/bootstrap.php';
+}
 
 /**
- * Finalize the packing operation for a transfer.
- *
- * @param array $input Request payload containing transfer and line data.
+ * Perform the finalize pack transition.
  */
-function finalize_pack(array $input): void
+function cisv2_finalize_pack(int $transferId): array
 {
-    $transferId = (int) ($input['transfer_id'] ?? 0);
     if ($transferId <= 0) {
-        Response::json(['ok' => false, 'error' => 'Missing transfer_id'], 400);
+        return ['success' => false, 'error' => 'Missing transfer'];
     }
 
-    $linesRaw = $input['lines'] ?? [];
-    if (!is_array($linesRaw)) {
-        Response::json(['ok' => false, 'error' => 'Invalid lines payload'], 400);
+    $pdo = $GLOBALS['cisv2']['pdo'] ?? null;
+    if (!$pdo instanceof \PDO) {
+        return ['success' => false, 'error' => 'Database unavailable'];
     }
 
-    $validated = [];
-    foreach ($linesRaw as $line) {
-        if (!isset($line['sku'])) {
-            continue;
+    try {
+        $pdo->beginTransaction();
+
+        $stmt = $pdo->prepare('SELECT status FROM stock_transfers WHERE id = :id FOR UPDATE');
+        $stmt->execute([':id' => $transferId]);
+        $transfer = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$transfer) {
+            throw new \RuntimeException('Transfer not found');
         }
-        $sku = (string) $line['sku'];
-        $packed = (int) ($line['packed'] ?? 0);
-        if ($packed < 0) {
-            Response::json(['ok' => false, 'error' => 'Negative qty not allowed'], 422);
-        }
-        $validated[] = ['sku' => $sku, 'packed' => $packed];
-    }
 
-    Response::json([
-        'ok'           => true,
-        'transfer_id'  => $transferId,
-        'saved_lines'  => count($validated),
-        'status'       => 'packed',
-    ]);
+        if (($transfer['status'] ?? '') === 'packed') {
+            $pdo->commit();
+            return ['success' => true, 'info' => 'Already packed'];
+        }
+
+        $update = $pdo->prepare("UPDATE stock_transfers SET status = 'packed', packed_at = NOW() WHERE id = :id");
+        $update->execute([':id' => $transferId]);
+
+        $pdo->commit();
+
+        if (function_exists('cisv2_queue_enqueue')) {
+            cisv2_queue_enqueue('transfer.after_packed', ['transfer_id' => $transferId]);
+        }
+
+        return ['success' => true];
+    } catch (\Throwable $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        error_log('Finalize pack error: ' . $e->getMessage());
+        return ['success' => false, 'error' => 'Server error'];
+    }
+}
+
+/**
+ * Emit JSON response for direct access.
+ */
+function cisv2_finalize_pack_endpoint(): void
+{
+    header('Content-Type: application/json; charset=utf-8');
+    $transferId = isset($_GET['transfer']) ? max(0, (int) $_GET['transfer']) : 0;
+    $payload = cisv2_finalize_pack($transferId);
+    http_response_code(($payload['success'] ?? false) ? 200 : 500);
+    echo json_encode($payload);
+}
+
+if (basename(__FILE__) === basename($_SERVER['SCRIPT_FILENAME'] ?? '')) {
+    cisv2_finalize_pack_endpoint();
 }
