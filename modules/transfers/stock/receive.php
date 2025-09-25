@@ -7,37 +7,33 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/assets/functions/ApiResponder.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/assets/functions/HttpGuard.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/modules/transfers/stock/lib/AccessPolicy.php';
 
-use Modules\Transfers\Stock\Services\ReceiveService; // alias for ReceiptService is kept in the class file
+use Modules\Transfers\Stock\Services\ReceiptService;   // class_alias handles ReceiveService
+use Modules\Transfers\Stock\Services\TransfersService;
 use Modules\Transfers\Stock\Lib\AccessPolicy;
 
+// Auth guard (fallback)
 if (!function_exists('requireLoggedInUser')) {
   function requireLoggedInUser(): array {
-    if (empty($_SESSION['userID'])) {
-      http_response_code(302);
-      header('Location: /login.php');
-      exit;
-    }
-    return ['id' => (int)$_SESSION['userID']];
+    if (empty($_SESSION['userID'])) { http_response_code(302); header('Location: /login.php'); exit; }
+    return ['id'=>(int)$_SESSION['userID']];
   }
 }
 $user = requireLoggedInUser();
 
-// POST
+// POST (JSON)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   HttpGuard::sameOriginOr([]);
   HttpGuard::rateLimit('receive_save:'.(int)$user['id'], 60, 60);
   JsonGuard::csrfCheckOptional();
   JsonGuard::idempotencyGuard();
-  $payload = JsonGuard::readJson();
 
+  $payload = JsonGuard::readJson();
   try {
     $tid = (int)($_GET['transfer'] ?? 0);
     if ($tid <= 0) ApiResponder::json(['success'=>false,'error'=>'Missing ?transfer id'], 400);
-    if (!AccessPolicy::canAccessTransfer((int)$user['id'], $tid)) {
-      ApiResponder::json(['success'=>false,'error'=>'Forbidden'], 403);
-    }
+    if (!AccessPolicy::canAccessTransfer((int)$user['id'], $tid)) ApiResponder::json(['success'=>false,'error'=>'Forbidden'], 403);
 
-    $svc = new ReceiveService(); // alias provided; points to ReceiptService
+    $svc = new ReceiptService(); // alias covers ReceiveService
     $res = $svc->saveReceive($tid, $payload, (int)$user['id']);
     ApiResponder::json($res, 200);
   } catch (\Throwable $e) {
@@ -45,15 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-// GET
+// GET render
 $tid = (int)($_GET['transfer'] ?? 0);
 if ($tid <= 0) { http_response_code(400); echo 'Missing ?transfer id'; exit; }
-if (!AccessPolicy::canAccessTransfer((int)$user['id'], $tid)) {
-  http_response_code(403); echo 'Forbidden'; exit;
-}
+if (!AccessPolicy::canAccessTransfer((int)$user['id'], $tid)) { http_response_code(403); echo 'Forbidden'; exit; }
 
-$svc = new ReceiveService();
-$transfer = $svc->getTransfer($tid);
+$txSvc = new TransfersService();
+$transfer = $txSvc->getTransfer($tid);
 
 include $_SERVER['DOCUMENT_ROOT'].'/assets/template/html-header.php';
 include $_SERVER['DOCUMENT_ROOT'].'/assets/template/header.php';
@@ -67,16 +61,13 @@ include $_SERVER['DOCUMENT_ROOT'].'/assets/template/header.php';
         <li class="breadcrumb-item"><a href="/modules/transfers">Transfers</a></li>
         <li class="breadcrumb-item active">Receive #<?= htmlspecialchars((string)$tid) ?></li>
       </ol>
-
       <div class="container-fluid">
         <?php include __DIR__.'/views/receive.view.php'; ?>
       </div>
     </main>
     <?php include $_SERVER['DOCUMENT_ROOT'].'/assets/template/personalisation-menu.php'; ?>
   </div>
-  <?php
-    include $_SERVER['DOCUMENT_ROOT'].'/assets/template/html-footer.php';
-    include $_SERVER['DOCUMENT_ROOT'].'/assets/template/footer.php';
-  ?>
+  <?php include $_SERVER['DOCUMENT_ROOT'].'/assets/template/html-footer.php';
+        include $_SERVER['DOCUMENT_ROOT'].'/assets/template/footer.php'; ?>
 </body>
 </html>
