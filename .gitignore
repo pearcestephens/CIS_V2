@@ -2,8 +2,10 @@
 # Ignore all by default
 *
 
-# Allow only our tracked paths
+# Allow only our tracked paths (unignore parent dirs too)
 !.gitignore
+!core
 !core/**
+!assets
 !assets/**
 !CIS_TEMPLATE.php

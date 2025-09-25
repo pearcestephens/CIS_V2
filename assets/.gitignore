@@ -1,0 +1,5 @@
+# Only track assets/template/** inside assets
+*
+!template/
+!template/**
+!.gitignore

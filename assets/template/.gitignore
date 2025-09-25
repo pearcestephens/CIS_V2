@@ -1,0 +1,5 @@
+# Only track cisv2/** inside assets/template
+*
+!cisv2/
+!cisv2/**
+!.gitignore
