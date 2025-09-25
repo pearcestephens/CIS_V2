@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace CIS\Transfers\Stock;
 
 use PDO;
+use function \db;
 
 class PackHelper
 {

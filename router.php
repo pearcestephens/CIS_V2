@@ -8,7 +8,7 @@ declare(strict_types=1);
  *   /cisv2/router.php?module=transfers/stock&view=pack&transfer=123
  */
 
-require __DIR__.'/bootstrap.php';
+require_once __DIR__.'/bootstrap.php';
 
 $module = trim((string)($_GET['module'] ?? ''));
 $view   = trim((string)($_GET['view']   ?? ''));
@@ -16,8 +16,8 @@ $view   = trim((string)($_GET['view']   ?? ''));
 // Very tight allowlist (expand as you add modules)
 $allowModules = [
     'transfers/stock' => [
-        'views'       => ['pack'],
-        'controllers' => ['pack','dispatch'],
+        'views'       => ['pack','receive'],
+        'controllers' => ['pack','receive','dispatch'],
     ]
 ];
 

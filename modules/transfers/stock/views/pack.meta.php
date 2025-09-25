@@ -1,28 +1,30 @@
 <?php
 declare(strict_types=1);
 
-$tid = 0;
-foreach (['transfer', 'transfer_id', 'id', 't'] as $k) {
-    if (isset($_GET[$k]) && (int) $_GET[$k] > 0) {
-        $tid = (int) $_GET[$k];
+$transferId = 0;
+foreach (['transfer', 'transfer_id', 'id', 't'] as $param) {
+    if (isset($_GET[$param]) && (int) $_GET[$param] > 0) {
+        $transferId = (int) $_GET[$param];
         break;
     }
 }
 
+$titleSuffix = $transferId > 0 ? ' #' . $transferId : '';
+
 return [
-    'title'      => $tid > 0 ? ('Pack Transfer #' . $tid) : 'Pack Transfer',
+    'title'      => 'Pack Transfer' . $titleSuffix,
     'breadcrumb' => [
-        ['label' => 'Transfers', 'href' => '/module/transfers'],
-        ['label' => 'Stock',     'href' => '/module/transfers/stock'],
-        ['label' => $tid > 0 ? ('Pack #' . $tid) : 'Pack'],
+        ['label' => 'Transfers', 'href' => '/cisv2/router.php?module=transfers'],
+        ['label' => 'Stock',     'href' => '/cisv2/router.php?module=transfers/stock'],
+        ['label' => $transferId > 0 ? 'Pack #' . $transferId : 'Pack'],
     ],
     'assets'     => [
         'css' => [
-            '/modules/transfers/stock/css/pack.css',
-            '/modules/transfers/stock/css/pack.shipping.css',
+            '/cisv2/modules/transfers/stock/css/pack.css',
+            '/cisv2/modules/transfers/stock/css/pack.shipping.css',
         ],
         'js'  => [
-            '/modules/transfers/stock/js/pack.shipping.js',
+            '/cisv2/modules/transfers/stock/js/pack.shipping.js',
         ],
     ],
 ];

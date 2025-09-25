@@ -1,41 +1,46 @@
 <?php
 declare(strict_types=1);
 
-/**
- * cisv2/core/layout.php
- * cis_render_layout(array $meta, string $content): void
- */
+if (!function_exists('cis_render_layout')) {
+    /**
+     * Render the standard CISV2 layout chrome.
+     */
+    function cis_render_layout(array $meta, string $content): void
+    {
+        $docRoot = rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/');
+        $tplBase = $docRoot ? $docRoot . '/assets/templates/cisv2' : '';
+        if ($tplBase === '' || !is_dir($tplBase)) {
+            $tplBase = CISV2_ROOT . '/assets/templates/cisv2';
+        }
 
-function cis_render_layout(array $meta, string $content): void {
-    $tplBase = CISV2_ROOT.'/assets/templates/cisv2';
-    $title   = $meta['title'] ?? 'CIS';
-    $breadcrumb = $meta['breadcrumb'] ?? [];
+        require $tplBase . '/html-header.php';
+        require $tplBase . '/header.php';
 
-    // Expose for template parts
-    $GLOBALS['cisv2_view'] = [
-        'meta'       => $meta,
-        'content'    => $content,
-        'breadcrumb' => $breadcrumb,
-        'title'      => $title,
-    ];
+        echo '<div class="container">';
+        echo '<div class="cisv2-layout mt-4 mb-5">';
+        echo '<div class="row g-4">';
 
-    require $tplBase.'/html-header.php';
-    require $tplBase.'/header.php';
-    require $tplBase.'/sidemenu.php';
-    require $tplBase.'/personalisation-menu.php';
+        echo '<div class="col-12 col-lg-3">';
+        try {
+            require $tplBase . '/sidemenu.php';
+        } catch (\Throwable $e) {
+            error_log('cisv2 layout sidemenu include failed: ' . $e->getMessage());
+            echo '<div class="alert alert-warning mb-3">Sidebar unavailable</div>';
+        }
+        echo '</div>';
 
-    // Main shell
-    echo '<main class="cis-main container-fluid">';
-    // Optional breadcrumb container supplied by template
-    if (function_exists('cisv2_breadcrumb')) { cisv2_breadcrumb($breadcrumb); }
-    echo $content;
-    echo '</main>';
+        echo '<div class="col-12 col-lg-9">';
+        if (!empty($meta['title'])) {
+            echo '<h1 class="h4 mb-4">' . htmlspecialchars((string) $meta['title'], ENT_QUOTES, 'UTF-8') . '</h1>';
+        }
+        echo $content;
+        echo '</div>';
 
-    require $tplBase.'/quick-product-search.php';
-    require $tplBase.'/footer.php';
-    $postIntegration = $tplBase.'/post-integration.php';
-    if (is_file($postIntegration)) {
-        require $postIntegration;
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+
+        require $tplBase . '/footer.php';
+        require $tplBase . '/html-footer.php';
     }
-    require $tplBase.'/html-footer.php';
 }

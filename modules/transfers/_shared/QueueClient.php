@@ -35,14 +35,20 @@ final class TransferQueueClient
         ]);
     }
 
-    public function label(int $transferPk, array $parcelPlan, string $carrier = 'MVP', ?string $idk = null): array
+    public function label(int $transferPk, array $parcelPlan, string $carrier = 'MVP', ?string $idk = null, ?array $auth = null): array
     {
-        return $this->post('/transfer.label.php', [
+        $payload = [
             'transfer_pk'     => $transferPk,
             'carrier'         => $carrier,
             'parcel_plan'     => $parcelPlan,
             'idempotency_key' => $idk,
-        ]);
+        ];
+
+        if ($auth) {
+            $payload['auth'] = $auth;
+        }
+
+        return $this->post('/transfer.label.php', $payload);
     }
 
     public function send(int $transferPk, array $lines, ?string $version = null, ?string $idk = null): array

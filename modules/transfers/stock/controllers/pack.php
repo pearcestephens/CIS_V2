@@ -8,7 +8,7 @@ declare(strict_types=1);
  * Uses: views/pack.php for the main content
  */
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/core/csrf.php';
+require_once CISV2_ROOT . '/core/csrf.php';
 require_once __DIR__ . '/../lib/PackHelper.php';
 require_once __DIR__ . '/../lib/TokensResolver.php';
 
@@ -19,6 +19,19 @@ $tid     = isset($params['transfer']) ? max(0, (int)$params['transfer']) : 0;
 
 // Load transfer metadata from core table
 $transfer = null;
+$destDefaults = [
+    'name' => null,
+    'company' => null,
+    'addr1' => null,
+    'addr2' => null,
+    'suburb' => null,
+    'city' => null,
+    'postcode' => null,
+    'email' => null,
+    'phone' => null,
+    'instructions' => null,
+    'country' => 'NZ',
+];
 if ($tid > 0) {
     $st = $pdo->prepare("SELECT id, public_id, vend_number, status, outlet_from, outlet_to, created_at
                          FROM transfers WHERE id = :id LIMIT 1");
@@ -35,7 +48,7 @@ if ($tid > 0) {
             'created_at'         => (string) ($row['created_at'] ?? ''),
         ];
 
-        $outStmt = $pdo->prepare("SELECT id, name FROM vend_outlets WHERE id IN (:from, :to)");
+        $outStmt = $pdo->prepare('SELECT id, name FROM vend_outlets WHERE id IN (:from, :to)');
         $outStmt->execute([
             ':from' => $transfer['origin_outlet_id'],
             ':to'   => $transfer['dest_outlet_id'],
@@ -46,6 +59,40 @@ if ($tid > 0) {
             }
             if ($outlet['id'] === $transfer['dest_outlet_id']) {
                 $transfer['dest_outlet_name'] = $outlet['name'];
+            }
+        }
+
+        if (!empty($transfer['dest_outlet_id'])) {
+            $destRow = null;
+            $destFetch = $pdo->prepare('SELECT * FROM vend_outlets WHERE id = :id LIMIT 1');
+            $destFetch->execute([':id' => $transfer['dest_outlet_id']]);
+            $destRow = $destFetch->fetch(PDO::FETCH_ASSOC) ?: null;
+
+            if (!$destRow) {
+                $destFetch = $pdo->prepare('SELECT * FROM vend_outlets WHERE code = :code LIMIT 1');
+                $destFetch->execute([':code' => $transfer['dest_outlet_id']]);
+                $destRow = $destFetch->fetch(PDO::FETCH_ASSOC) ?: null;
+            }
+
+            if ($destRow) {
+                $pick = static function (array $row, array $candidates, ?string $fallback = null): ?string {
+                    foreach ($candidates as $candidate) {
+                        if (array_key_exists($candidate, $row) && (string) $row[$candidate] !== '') {
+                            return (string) $row[$candidate];
+                        }
+                    }
+                    return $fallback;
+                };
+
+                $destDefaults['name'] = $pick($destRow, ['contact_name', 'contact', 'name'], $destDefaults['name']);
+                $destDefaults['company'] = $pick($destRow, ['company', 'name'], $destDefaults['company']);
+                $destDefaults['addr1'] = $pick($destRow, ['physical_address_1', 'address1', 'addr1', 'street_address', 'street'], $destDefaults['addr1']);
+                $destDefaults['addr2'] = $pick($destRow, ['physical_address_2', 'address2', 'addr2'], $destDefaults['addr2']);
+                $destDefaults['suburb'] = $pick($destRow, ['physical_suburb', 'suburb', 'district'], $destDefaults['suburb']);
+                $destDefaults['city'] = $pick($destRow, ['physical_city', 'city', 'town'], $destDefaults['city']);
+                $destDefaults['postcode'] = $pick($destRow, ['physical_postcode', 'postcode', 'post_code'], $destDefaults['postcode']);
+                $destDefaults['email'] = $pick($destRow, ['email', 'contact_email'], $destDefaults['email']);
+                $destDefaults['phone'] = $pick($destRow, ['physical_phone_number', 'phone', 'contact_phone'], $destDefaults['phone']);
             }
         }
     }
@@ -115,10 +162,10 @@ $packConfig = [
     'support'         => $carrierSupport,
     'metrics'         => $metrics,
     'endpoints'       => [
-        'queue_label'   => '/cisv2/modules/transfers/stock/ajax/queue.label.php',
-        'manual_label'  => '/cisv2/modules/transfers/stock/ajax/label.manual.php',
-        'finalize_pack' => '/cisv2/modules/transfers/stock/ajax/actions/finalize_pack.php',
+        'labels_dispatch' => '/cisv2/modules/transfers/stock/ajax/actions/labels_dispatch.php',
+        'finalize_pack'   => '/cisv2/modules/transfers/stock/ajax/actions/finalize_pack_sync.php',
     ],
+    'destination'     => $destDefaults,
     'csrf'            => cis_csrf_token(),
     'request_id'      => $requestId,
 ];
@@ -140,6 +187,7 @@ $tidVar        = $tid;
 $packItems     = $itemRows;
 $packMetrics   = $metrics;
 $packConfigVar = $packConfig;
+$packDestDefaults = $destDefaults;
 $carrierTokens = $tokens;
 $carrierSupportVar = $carrierSupport;
 require $viewFile;

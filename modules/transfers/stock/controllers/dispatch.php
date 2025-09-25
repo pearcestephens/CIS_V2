@@ -14,6 +14,9 @@ switch ($view) {
     case 'pack':
         require __DIR__ . '/pack.php';
         break;
+    case 'receive':
+        require __DIR__ . '/receive.php';
+        break;
     default:
         http_response_code(404);
         echo 'Not Found';

@@ -59,8 +59,23 @@ try {
         exit;
     }
 
+    $tokens = [];
+    if (!empty($transferRow['outlet_from'])) {
+        try {
+            $tokens = TokensResolver::forOutlet((string) $transferRow['outlet_from']);
+        } catch (\Throwable $e) {
+            $tokens = [];
+        }
+    }
+
+    $queueAuth = array_filter([
+        'gss_token'               => $tokens['gss_token'] ?? null,
+        'nzpost_api_key'          => $tokens['nzpost_api_key'] ?? null,
+        'nzpost_subscription_key' => $tokens['nzpost_subscription_key'] ?? null,
+    ], static fn($v) => is_string($v) && $v !== '');
+
     $queueClient   = new TransferQueueClient();
-    $queueResponse = $queueClient->label($transferId, $plan, $carrier, $idk);
+    $queueResponse = $queueClient->label($transferId, $plan, $carrier, $idk, $queueAuth ?: null);
     $queueOk       = (bool) ($queueResponse['ok'] ?? $queueResponse['success'] ?? false);
 
     if (!$queueOk) {
@@ -121,14 +136,6 @@ try {
     $shouldPrint    = should_print_now($carrier, $plan, $queueResponse);
     if ($shouldPrint) {
         if ($labelsForPrint) {
-            $tokens = [];
-            if (!empty($transferRow['outlet_from'])) {
-                try {
-                    $tokens = TokensResolver::forOutlet((string) $transferRow['outlet_from']);
-                } catch (\Throwable $e) {
-                    $tokens = [];
-                }
-            }
             $printMeta = [
                 'transfer_id'   => $transferId,
                 'transfer_code' => $transferRow['public_id'] ?? $transferRow['vend_number'] ?? null,
