@@ -1,0 +1,2 @@
+<?php declare(strict_types=1);
+namespace Core\Http; use Core\View\View; abstract class BaseController { protected View $view; public function __construct(){ $base=rtrim($_SERVER['DOCUMENT_ROOT'],'/').'/cisv2'; $this->view=new View(baseDir:$base, themesDir:$base.'/themes'); } protected function render(string $viewRelPath,array $data=[],array $meta=[],string $layout='app'):void{ $this->view->with($data)->layout($layout,$meta)->render($viewRelPath); } }

@@ -1,77 +1,58 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 /**
  * cisv2/router.php
- * Routes ?module=&view=&... to corresponding controller/view.
+ * Minimal CIS router: ?module=&view=
  * Example:
  *   /cisv2/router.php?module=transfers/stock&view=pack&transfer=123
  */
 
 require_once __DIR__.'/bootstrap.php';
 
-$module = trim((string)($_GET['module'] ?? ''));
-$view   = trim((string)($_GET['view']   ?? ''));
+$module = preg_replace('~[^a-z0-9/_]+~i', '', $_GET['module'] ?? '');
+$view   = preg_replace('~[^a-z0-9_]+~i',  '', $_GET['view']   ?? 'index');
 
-// Very tight allowlist (expand as you add modules)
-$allowModules = [
-    'transfers/stock' => [
-        'views'       => ['pack','receive'],
-        'controllers' => ['pack','receive','dispatch'],
-    ]
+// Allowlist modules/views (expand as needed)
+$allowed = [
+    'transfers/stock' => ['pack','receive','dispatch'],
 ];
 
-if (!isset($allowModules[$module])) {
-    http_response_code(404); exit('Unknown module');
+if (!isset($allowed[$module])) {
+    http_response_code(404); exit("Unknown module: $module");
 }
-if ($view !== '' && !in_array($view, $allowModules[$module]['views'], true)) {
-    http_response_code(404); exit('Unknown view');
+if (!in_array($view, $allowed[$module], true)) {
+    http_response_code(404); exit("Unknown view: $view");
 }
 
-// Resolve controller (default to same as view)
-$controller = ($view !== '') ? $view : 'dispatch';
+$modPath = __DIR__."/modules/$module";
+$ctlPath = "$modPath/controllers/$view/index.php";
+$viewPath= "$modPath/views/$view.php";
+$metaPath= "$modPath/views/$view.meta.php";
 
-// Build paths
-$modPath = CISV2_ROOT."/modules/{$module}";
-$ctlPath = $modPath."/controllers/{$controller}.php";
-$viewPath= $modPath."/views/{$view}.php";
-$metaPath= $modPath."/views/{$view}.meta.php";
+if (!is_file($ctlPath)) {
+    http_response_code(404); exit("Controller not found: $ctlPath");
+}
 
-// Run controller -> must set $content and $meta (array)
-if (!is_file($ctlPath)) { http_response_code(404); exit('Controller not found'); }
-
-$meta = $content = null;
-
-/** Provide minimal execution context */
-$ctx = [
+// --- Run controller ---
+$meta = ['title'=>'CIS']; $content = '';
+$ctx  = [
     'pdo'    => $GLOBALS['cisv2']['pdo'],
     'env'    => $GLOBALS['cisv2']['env'],
-    'user'   => $_SESSION['user'] ?? null, // align to legacy user object if present
+    'user'   => $_SESSION['user'] ?? null,
     'params' => $_GET,
 ];
 
-// Include controller (it should populate $content & $meta)
-require $ctlPath;
+ob_start();
+require $ctlPath;   // controller can override $meta/$content
+if (!$content && is_file($viewPath)) {
+    require $viewPath;
+}
+$content = ob_get_clean() ?: $content;
 
-if (!is_array($meta)) {
-    // Try meta file if controller didn't set it
-    if (is_file($metaPath)) {
-        $meta = (static function() use ($metaPath) { return require $metaPath; })();
-    } else {
-        $meta = ['title' => 'CIS'];
-    }
+// Fallback meta
+if ($meta === ['title'=>'CIS'] && is_file($metaPath)) {
+    $meta = require $metaPath;
 }
 
-if (!is_string($content)) {
-    // Fallback to view file render
-    if (is_file($viewPath)) {
-        ob_start();
-        $params = $_GET; // make $params visible in view
-        require $viewPath;
-        $content = (string)ob_get_clean();
-    } else {
-        $content = '<div class="alert alert-warning">No view content.</div>';
-    }
-}
-
+// --- Render ---
 cis_render_layout($meta, $content);
