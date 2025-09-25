@@ -1,0 +1,78 @@
+/* ==========================================================================
+   Transfers — Common UI (shared across Pack/Receive)
+   ========================================================================== */
+
+:root {
+  --tfx-muted:#6c757d;
+  --tfx-success:#28a745;
+  --tfx-warning:#fd7e14;
+  --tfx-danger:#dc3545;
+  --tfx-info:#17a2b8;
+  --tfx-light:#f8f9fa;
+  --tfx-border:#dee2e6;
+}
+
+/* Generic card/table spacing fixes */
+.tfx-card-tight .card-body { padding: .75rem 1rem; }
+
+/* Address summary blocks (used by courier panels) */
+.address-summary {
+  background: #f8f9fa;
+  border-left: 4px solid var(--tfx-info);
+  border-radius: .25rem;
+}
+
+/* Courier panels (NZ Post, GSS, Manual) */
+.courier-panel {
+  border: 1px solid var(--tfx-border);
+  border-radius: .25rem;
+  background: #fff;
+}
+
+/* Shipping tabs */
+.shipping-tabs .nav-link {
+  font-weight: 600;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: .6rem .75rem;
+}
+.shipping-tabs .nav-link.active {
+  border-bottom-color: var(--tfx-info);
+}
+
+/* Inline badges/messages shown when counted=0, etc. */
+.badge-to-remove {
+  display: inline-block;
+  margin-left: .5rem;
+  padding: .15rem .35rem;
+  font-size: .7rem;
+  border-radius: .25rem;
+  color: #212529;
+  background: #e9ecef;
+}
+
+/* Tiny helper for fixed-width number inputs */
+.tfx-num {
+  width: 6.5em;
+}
+
+/* Simple toast container if Bootstrap Toasts aren’t used */
+#toast-container .toast {
+  border-radius: .25rem;
+  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+}
+
+/* Table utilities */
+.table .counted-td input[type="number"] {
+  width: 6em;
+  min-width: 5em;
+}
+
+/* Print helpers used by picking sheet */
+@media print {
+  /* Hide interactive inputs; show their static mirror values */
+  .counted-td input[type="number"] { display: none !important; }
+  .counted-td .counted-print-value { display: inline !important; }
+  /* Reduce borders for ink saving */
+  table.table, table.table * { border-color: #999 !important; }
+}

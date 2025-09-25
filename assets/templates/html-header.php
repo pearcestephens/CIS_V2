@@ -17,6 +17,10 @@ $__pageTitle = htmlspecialchars($GLOBALS['PAGE_TITLE'] ?? 'CIS', ENT_QUOTES, 'UT
 <link href="<?= $__assetBase ?>assets/css/sidebar-fixes.css" rel="stylesheet">
 <link href="<?= $__assetBase ?>assets/css/sidebar-dark-theme-restore.css" rel="stylesheet">
 
+<link rel="stylesheet" href="/assets/css/transfers-common.css">
+<link rel="stylesheet" href="/assets/css/transfers-pack.css">
+<link rel="stylesheet" href="/assets/css/transfers-receive.css">
+
 <!-- Icons -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/simple-line-icons.min.css" rel="stylesheet">

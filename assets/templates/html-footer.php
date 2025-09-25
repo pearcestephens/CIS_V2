@@ -12,5 +12,7 @@ $__assetBase = defined('HTTPS_URL') ? HTTPS_URL : '/';
 <script src="<?= $__assetBase ?>assets/node_modules/@coreui/coreui-plugin-chartjs-custom-tooltips/dist/js/custom-tooltips.min.js"></script>
 <script src="<?= $__assetBase ?>assets/js/main.js"></script>
 <script src="<?= $__assetBase ?>assets/js/sidebar-mobile-enhance.js"></script>
+
+
 </body>
 </html>

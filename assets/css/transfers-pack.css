@@ -1,0 +1,103 @@
+/* ==========================================================================
+   Transfers — PACK view specifics
+   ========================================================================== */
+
+/* Big single warning banner for PACKONLY mode */
+.packonly-banner {
+  position: relative;
+  margin: 12px 0 16px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+}
+.packonly-stripe {
+  height: 6px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #ffec99 0, #ffec99 10px,
+    #ffa8a8 10px, #ffa8a8 20px
+  );
+}
+.packonly-panel {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 16px;
+}
+.packonly-panel .w-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+.packonly-panel .w-title {
+  font-weight: 800;
+  letter-spacing: .3px;
+}
+.packonly-panel .w-body {
+  font-size: .95rem;
+}
+.packonly-panel .w-pill {
+  display: inline-block;
+  background:#fff;
+  border: 1px solid #ffe8a1;
+  padding: 2px 8px;
+  margin: 2px 4px 0 0;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* Toolbar strip above table */
+#table-action-toolbar .badge { font-size: .75rem; }
+#table-action-toolbar .custom-control-label { cursor: pointer; }
+
+/* Transfer items table */
+#transfer-table td, #transfer-table th { vertical-align: middle; }
+#transfer-table .inv,
+#transfer-table .planned { white-space: nowrap; }
+
+/* Label printer card */
+#delivery-tracking-card .card-header small { opacity: .8; }
+
+/* Box Label Printer */
+#table-card + .card .card-header {
+  background: #ffe08a;
+  color: #222;
+}
+#table-card + .card .btn { white-space: nowrap; }
+
+/* NZ Post / GSS quick preset buttons */
+#nzpost-pane .btn-outline-info,
+#gss-pane .btn-outline-success {
+  margin-right: .25rem;
+  margin-bottom: .25rem;
+}
+
+/* Generated labels list */
+#generated-labels .alert {
+  padding: .35rem .5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+/* History table tweaks */
+#history-pane table thead th { white-space: nowrap; }
+#history-pane code { font-size: .85rem; }
+
+/* Subtle success pulse when rows are added */
+@keyframes tfx-row-pulse {
+  0% { background:#e6ffed; }
+  100% { background:transparent; }
+}
+tr.table-success { animation: tfx-row-pulse 1.2s ease-out 1; }
+
+/* Print-friendly tweaks specific to PACK page */
+@media print {
+  /* Hide buttons, inputs and non-essential controls inside pack view */
+  #table-action-toolbar, .btn, .custom-control, .dropdown, .modal, .courier-panel,
+  #generated-labels, #delivery-tracking-card .card-header small { display:none !important; }
+
+  /* Keep just the essentials: heading + items table */
+  .card-header h4 { margin-bottom: .25rem; }
+  #transfer-table { font-size: 12px; }
+}

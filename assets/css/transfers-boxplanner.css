@@ -1,0 +1,26 @@
+/* ==========================================================================
+   Transfers — Box Planner (Pack)
+   ========================================================================== */
+
+#box-planner-card .card-header {
+  display:flex; align-items:center; justify-content:space-between;
+}
+#box-planner-card .subtle {
+  color:#6c757d; font-size:.9rem;
+}
+#box-planner-card .preset-chip {
+  display:inline-block; border:1px solid #dee2e6; border-radius:999px;
+  padding:.15rem .55rem; margin:.15rem .25rem; background:#f8f9fa; cursor:pointer;
+}
+#box-planner-card .preset-chip:hover { background:#eef2f6; }
+#box-planner-card .package-row input[type="number"] {
+  width: 7.5em;
+}
+#box-planner-card .remove-row {
+  width:2.2rem; text-align:center;
+}
+#plan-results .badge { font-size:.8rem; }
+#plan-summary {
+  background:#f8f9fa; border:1px solid #dee2e6; border-radius:.25rem; padding:.5rem .75rem;
+}
+#plan-summary strong { font-weight:700; }
