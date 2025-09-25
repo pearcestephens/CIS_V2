@@ -1,0 +1,154 @@
+/*
+ * pack.shipping.css
+ * Styles for the packing shipping plugin UI.
+ */
+
+.pack-screen {
+  display: block;
+}
+
+.pack-screen .pack-header .badge {
+  letter-spacing: 0.08em;
+  font-size: 0.65rem;
+}
+
+.pack-summary .mono {
+  font-family: var(--bs-font-monospace, 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace);
+}
+
+.pack-shipping-panel .cis-ship {
+  border: 1px solid #e4e7ec;
+  border-radius: 12px;
+  padding: 16px;
+  background: #fafbfc;
+}
+
+.pack-shipping-panel .cis-ship h4 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+}
+
+.pack-shipping-panel .cis-ship .switcher {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.pack-shipping-panel .cis-ship .switcher button {
+  border: 1px solid #d0d5dd;
+  background: #fff;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.pack-shipping-panel .cis-ship .switcher button.active {
+  background: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+}
+
+.pack-shipping-panel .cis-ship .card {
+  border: 1px solid #e4e7ec;
+  border-radius: 10px;
+  background: #fff;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.pack-shipping-panel .cis-ship label {
+  font-size: 12px;
+  color: #677085;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.pack-shipping-panel .cis-ship input,
+.pack-shipping-panel .cis-ship select,
+.pack-shipping-panel .cis-ship textarea {
+  width: 100%;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.pack-shipping-panel .cis-ship small.muted {
+  color: #6b7280;
+  display: block;
+  margin-top: 4px;
+}
+
+.pack-shipping-panel .cis-ship .status {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.pack-shipping-panel .cis-ship .status.ok {
+  color: #0a7a20;
+}
+
+.pack-shipping-panel .cis-ship .status.warn {
+  color: #9a6b00;
+}
+
+.pack-shipping-panel .cis-ship .status.err {
+  color: #b42318;
+}
+
+.pack-shipping-panel .cis-ship .dim-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pack-shipping-panel .cis-ship .dim-table th,
+.pack-shipping-panel .cis-ship .dim-table td {
+  padding: 6px;
+  border-bottom: 1px solid #eef2f7;
+  font-size: 13px;
+  text-align: center;
+}
+
+.pack-shipping-panel .cis-ship .btn {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.pack-shipping-panel .cis-ship .btn-primary {
+  background: #0d6efd;
+  color: #fff;
+}
+
+.pack-shipping-panel .cis-ship .btn-secondary {
+  background: #e9edf5;
+  color: #111;
+}
+
+.pack-shipping-panel .cis-ship .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.pack-shipping-panel .cis-ship .cis-hidden {
+  display: none !important;
+}
+
+#cis-addr-modal {
+  display: none;
+}
+
+#cis-addr-modal.cis-visible {
+  display: block;
+}
+
+@media (max-width: 767.98px) {
+  .pack-screen .card-body .d-flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

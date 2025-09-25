@@ -16,4 +16,13 @@ return [
         ['label' => 'Stock',     'href' => '/module/transfers/stock'],
         ['label' => $tid > 0 ? ('Pack #' . $tid) : 'Pack'],
     ],
+    'assets'     => [
+        'css' => [
+            '/modules/transfers/stock/css/pack.css',
+            '/modules/transfers/stock/css/pack.shipping.css',
+        ],
+        'js'  => [
+            '/modules/transfers/stock/js/pack.shipping.js',
+        ],
+    ],
 ];

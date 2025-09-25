@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once $_SERVER['DOCUMENT_ROOT'] . '/core/bootstrap.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/core/csrf.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/core/middleware/kernel.php';
+require_once dirname(__DIR__) . '/lib/PackHelper.php';
 
 header('Content-Type: application/json;charset=utf-8');
 
@@ -32,39 +33,47 @@ try {
     exit;
   }
 
-  $pdo = db();
-  $pdo->beginTransaction();
+  $helper = new \CIS\Transfers\Stock\PackHelper();
+  $carrierCode = strtoupper(trim($carrier) ?: 'INTERNAL');
+  $weightInt   = max(0, $weight_g);
+  $plan = [
+    'reference' => "Transfer #{$tid}",
+    'parcels'   => [[
+      'weight_g' => $weightInt > 0 ? $weightInt : null,
+      'notes'    => $notes,
+    ]],
+  ];
 
-  // ensure a shipment row exists
-  $q = $pdo->prepare('INSERT INTO transfer_shipments(transfer_id, carrier, mode, status, created_at) VALUES(:t,:c,:m,:s, NOW())');
-  $q->execute([
-    ':t' => $tid,
-    ':c' => $carrier,
-    ':m' => 'manual',
-    ':s' => 'created'
-  ]);
-  $shipmentId = (int)$pdo->lastInsertId();
+  $result = $helper->generateLabel($tid, $carrierCode, $plan);
+  if (!$result['ok']) {
+    http_response_code(500);
+    echo json_encode(['ok'=>false,'error'=>'label_generate_failed','request_id'=>$ctx['request_id'] ?? null]);
+    exit;
+  }
 
-  // one parcel; you can extend UI to multiple if needed
-  $qp = $pdo->prepare('INSERT INTO transfer_parcels(shipment_id, parcel_number, tracking_number, tracking_url, weight_g, created_at) VALUES(:s, :n, :trk, :url, :wg, NOW())');
-  $qp->execute([
-    ':s' => $shipmentId,
-    ':n' => 1,
-    ':trk'=> $tracking,
-    ':url'=> null,
-    ':wg' => max(0, $weight_g)
-  ]);
+  $parcelId = $result['parcels'][0]['id'] ?? null;
+  $helper->setParcelTracking($tid, $parcelId ? (int)$parcelId : null, 1, $carrierCode, $tracking, null);
 
-  // optional: mark shipment as packed (you can leave status updates to later steps)
-  $pdo->commit();
+  if ($notes !== '') {
+    $helper->addPackNote($tid, '[Manual Label] ' . $notes);
+  }
 
-  // audit + log (soft fail if tables missing)
   try {
-    $a = $pdo->prepare('INSERT INTO transfer_audit_log(transfer_id, event, meta_json, created_at) VALUES(:t,:e,:j,NOW())');
-    $a->execute([':t'=>$tid, ':e'=>'manual_label_added', ':j'=>json_encode(['carrier'=>$carrier,'service'=>$service,'tracking'=>$tracking,'weight_g'=>$weight_g], JSON_UNESCAPED_SLASHES)]);
-  } catch (\Throwable $e) {}
+    $helper->audit($tid, 'manual_label_added', [
+        'carrier'  => $carrierCode,
+        'service'  => $service,
+        'tracking' => $tracking,
+        'weight_g' => $weightInt,
+    ]);
+  } catch (\Throwable $e) {
+  }
 
-  echo json_encode(['ok'=>true,'shipment_id'=>$shipmentId,'request_id'=>$ctx['request_id'] ?? null], JSON_UNESCAPED_SLASHES);
+  echo json_encode([
+    'ok'          => true,
+    'shipment_id' => $result['shipment_id'] ?? null,
+    'parcel_id'   => $parcelId,
+    'request_id'  => $ctx['request_id'] ?? null,
+  ], JSON_UNESCAPED_SLASHES);
 } catch (\Throwable $e) {
   http_response_code(500);
   echo json_encode(['ok'=>false,'error'=>'exception','request_id'=>$ctx['request_id'] ?? null]);
