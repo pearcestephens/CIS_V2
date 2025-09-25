@@ -5,13 +5,18 @@ declare(strict_types=1);
  * core/layout.php
  *
  * CIS page layout renderer used by CIS_TEMPLATE.php.
- * Looks for shared template parts under /assets/template/.
+ * Looks for shared template parts under assets/templates/<theme>/.
  * If not found, falls back to a minimal HTML scaffold.
  */
 
 function cis_render_layout(array $meta, string $content = ''): void
 {
-    $tpl = rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/') . '/assets/template/';
+    $tplRoot = defined('CIS_TEMPLATES_PATH')
+        ? CIS_TEMPLATES_PATH
+        : (rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/') . '/assets/templates');
+    $theme = defined('CIS_TEMPLATE_ACTIVE') ? CIS_TEMPLATE_ACTIVE : 'cisv2';
+    $tpl   = rtrim($tplRoot, '/') . '/' . $theme . '/';
+
     $hasTpl = is_dir($tpl)
         && is_file($tpl . 'html-header.php')
         && is_file($tpl . 'header.php')
@@ -38,6 +43,9 @@ function cis_render_layout(array $meta, string $content = ''): void
         include $tpl . 'personalisation-menu.php';
         include $tpl . 'footer.php';
         include $tpl . 'html-footer.php';
+        if (is_file($tpl . 'post-integration.php')) {
+            include $tpl . 'post-integration.php';
+        }
         return;
     }
 

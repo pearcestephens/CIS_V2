@@ -1,7 +1,10 @@
+/core/var/
 /vendor/
 /node_modules/
-.env
+/.env
 uploads/
 cache/
 *.log
+*.tmp
+.DS_Store
 /private_html/backups/

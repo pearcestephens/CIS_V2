@@ -1,0 +1,5 @@
+# Route transfers/stock requests through the CIS v2 router
+RewriteEngine On
+RewriteCond %{REQUEST_URI} ^/modules/module\.php$ [NC]
+RewriteCond %{QUERY_STRING} (^|&)module=transfers/stock(&|$) [NC]
+RewriteRule ^ /router.php [QSA,L]
